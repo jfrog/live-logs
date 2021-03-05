@@ -19,8 +19,6 @@ var getAllServiceIds = cliCommands.GetAllServerIds
 var newServiceLayer = servicelayer.NewService
 
 const (
-	defaultRequestTimeout    = 15 * time.Second
-	defaultLogRequestTimeout = time.Minute
 	defaultLogsRefreshRate   = time.Second
 )
 

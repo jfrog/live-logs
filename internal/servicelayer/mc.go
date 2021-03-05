@@ -12,7 +12,10 @@ import (
 )
 
 type McData struct {
-	ServiceData
+	nodeId          string
+	logFileName     string
+	lastPageMarker  int64
+	logsRefreshRate time.Duration
 }
 
 func NewMcServiceLayer() *McData{
@@ -89,7 +92,7 @@ func (s *McData) getConnectionDetails(serverId string)(url string, headers map[s
 	url = confDetails.GetMissionControlUrl()
 	accessToken := confDetails.GetAccessToken()
 	if url == "" {
-		return "",nil, fmt.Errorf("no url found in serverId : %s",serverId)
+		return "",nil, fmt.Errorf("mission control url is not found in serverId : %s, make sure you using latest version of Jfrog CLI",serverId)
 	}
 	if accessToken == "" {
 		return "",nil, fmt.Errorf("no access token found in serverId : %s, this is mandatory to connect to Mission Control product",serverId)

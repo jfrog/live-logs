@@ -5,21 +5,36 @@ import (
 	"encoding/json"
 	"fmt"
 	cliCommands "github.com/jfrog/jfrog-cli-core/common/commands"
+	cliVersionHelper "github.com/jfrog/jfrog-client-go/utils/version"
 	"github.com/jfrog/live-logs/internal/clientlayer"
 	"github.com/jfrog/live-logs/internal/constants"
 	"github.com/jfrog/live-logs/internal/model"
+	"strings"
 	"time"
 )
 
-type XrayData struct {
-	ServiceData
+const (
+	xrayVersionEndPoint = "api/v1/system/version"
+	xrayMinVersionSupport = "3.18.0"
+)
+
+type xrayVersionData struct {
+	Version string `json:"xray_version,omitempty"`
 }
 
-func NewXrayServiceLayer() *XrayData{
-	return &XrayData{}
+type XrayData struct {
+	nodeId          string
+	logFileName     string
+	lastPageMarker  int64
+	logsRefreshRate time.Duration
 }
 
 func (s *XrayData) GetConfig(ctx context.Context, serverId string) (*model.Config, error) {
+
+	err := s.checkVersion(ctx, serverId)
+	if err != nil {
+		return nil, err
+	}
 
 	timeoutCtx, cancelTimeout := context.WithTimeout(ctx, defaultRequestTimeout)
 	defer cancelTimeout()
@@ -56,6 +71,11 @@ func (s *XrayData) GetLogData(ctx context.Context, serverId string) (logData mod
 		return logData, fmt.Errorf("log file name must be set")
 	}
 
+	err = s.checkVersion(ctx, serverId)
+	if err != nil {
+		return logData, err
+	}
+
 	timeoutCtx, cancelTimeout := context.WithTimeout(ctx, defaultLogRequestTimeout)
 	defer cancelTimeout()
 
@@ -88,7 +108,7 @@ func (s *XrayData) getConnectionDetails(serverId string)(url string, headers map
 	url = confDetails.GetXrayUrl()
 	accessToken := confDetails.GetAccessToken()
 	if url == "" {
-		return "",nil, fmt.Errorf("no url found in serverId : %s",serverId)
+		return "",nil, fmt.Errorf("xray url is not found in serverId : %s, please make sure you using latest version of Jfrog CLI",serverId)
 	}
 	if accessToken == "" {
 		return "",nil, fmt.Errorf("no access token found in serverId : %s, this is mandatory to connect to Xray product",serverId)
@@ -98,6 +118,47 @@ func (s *XrayData) getConnectionDetails(serverId string)(url string, headers map
 	headers["Authorization"] = "Bearer " + accessToken
 
 	return url,headers, nil
+}
+
+func (s *XrayData) getVersion(ctx context.Context, serverId string) (string, error) {
+	timeoutCtx, cancelTimeout := context.WithTimeout(ctx, defaultRequestTimeout)
+	defer cancelTimeout()
+
+	baseUrl, headers, err := s.getConnectionDetails(serverId)
+	if err != nil {
+		return "", err
+	}
+	resBody, err := clientlayer.SendGet(timeoutCtx, serverId, xrayVersionEndPoint,constants.EmptyNodeId, baseUrl, headers)
+
+	if err != nil {
+		return "", err
+	}
+
+	versionData := xrayVersionData{}
+	err = json.Unmarshal(resBody, &versionData)
+	if err != nil {
+		return "", err
+	}
+	if versionData.Version == "" {
+		return "", fmt.Errorf("could not retreive version information from Xray")
+	}
+	return strings.TrimSpace(versionData.Version), nil
+}
+
+func (s *XrayData) checkVersion(ctx context.Context, serverId string) error {
+	currentVersion, err := s.getVersion(ctx, serverId)
+	if err != nil {
+		return err
+	}
+	if currentVersion == "" {
+		return fmt.Errorf("api returned an empty version")
+	}
+	versionHelper := cliVersionHelper.NewVersion(xrayMinVersionSupport)
+
+	if versionHelper.Compare(currentVersion) < 0 {
+		return fmt.Errorf("found Xray version as %s, minimum supported version is %s", currentVersion, xrayMinVersionSupport)
+	}
+	return nil
 }
 
 func (s *XrayData) SetNodeId(nodeId string) {

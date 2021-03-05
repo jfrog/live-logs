@@ -5,14 +5,28 @@ import (
 	"encoding/json"
 	"fmt"
 	cliCommands "github.com/jfrog/jfrog-cli-core/common/commands"
+	cliVersionHelper "github.com/jfrog/jfrog-client-go/utils/version"
 	"github.com/jfrog/live-logs/internal/clientlayer"
 	"github.com/jfrog/live-logs/internal/constants"
 	"github.com/jfrog/live-logs/internal/model"
+	"strings"
 	"time"
 )
 
+const (
+	distributionVersionEndPoint = "api/v1/system/info"
+	distributionMinVersionSupport = "2.7.0"
+)
+
 type DistributionData struct {
-	ServiceData
+	nodeId          string
+	logFileName     string
+	lastPageMarker  int64
+	logsRefreshRate time.Duration
+}
+
+type distributionVersionData struct {
+	Version string `json:"version,omitempty"`
 }
 
 func (s *DistributionData) GetConfig(ctx context.Context, serverId string) (*model.Config, error) {
@@ -83,7 +97,7 @@ func (s *DistributionData) getConnectionDetails(serverId string)(url string, hea
 	url = confDetails.GetDistributionUrl()
 	accessToken := confDetails.GetAccessToken()
 	if url == "" {
-		return "",nil, fmt.Errorf("no url found in serverId : %s",serverId)
+		return "",nil, fmt.Errorf("distribution url is not found in serverId : %s, please make sure you using latest version of Jfrog CLI",serverId)
 	}
 	if accessToken == "" {
 		return "",nil, fmt.Errorf("no access token found in serverId : %s, this is mandatory to connect to Distribution product",serverId)
@@ -93,6 +107,44 @@ func (s *DistributionData) getConnectionDetails(serverId string)(url string, hea
 	headers["Authorization"] = "Bearer " + accessToken
 
 	return url,headers, nil
+}
+
+func (s *DistributionData) getVersion(ctx context.Context, serverId string) (string, error) {
+	timeoutCtx, cancelTimeout := context.WithTimeout(ctx, defaultRequestTimeout)
+	defer cancelTimeout()
+
+	baseUrl, headers, err := s.getConnectionDetails(serverId)
+	if err != nil {
+		return "", err
+	}
+	resBody, err := clientlayer.SendGet(timeoutCtx, serverId, distributionVersionEndPoint,constants.EmptyNodeId, baseUrl, headers)
+
+	if err != nil {
+		return "", err
+	}
+
+	versionData := distributionVersionData{}
+	err = json.Unmarshal(resBody, &versionData)
+	if err != nil {
+		return "", err
+	}
+	if versionData.Version == "" {
+		return "", fmt.Errorf("could not retreive version information from Distribution")
+	}
+	return strings.TrimSpace(versionData.Version), nil
+}
+
+func (s *DistributionData) checkVersion(ctx context.Context, serverId string) error {
+	currentVersion, err := s.getVersion(ctx, serverId)
+	if err != nil {
+		return err
+	}
+	versionHelper := cliVersionHelper.NewVersion(currentVersion)
+
+	if versionHelper.Compare(distributionMinVersionSupport) < 0 {
+		return fmt.Errorf("found distribution version as %s, minimum supported version is %s", currentVersion, distributionMinVersionSupport)
+	}
+	return nil
 }
 
 func (s *DistributionData) SetNodeId(nodeId string) {
