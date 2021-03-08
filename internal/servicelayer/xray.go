@@ -9,6 +9,7 @@ import (
 	"github.com/jfrog/live-logs/internal/clientlayer"
 	"github.com/jfrog/live-logs/internal/constants"
 	"github.com/jfrog/live-logs/internal/model"
+	"os"
 	"strings"
 	"time"
 )
@@ -43,8 +44,12 @@ func (s *XrayData) GetConfig(ctx context.Context, serverId string) (*model.Confi
 	if err != nil {
 		return nil, err
 	}
-	resBody, err := clientlayer.SendGet(timeoutCtx, serverId, constants.ConfigEndpoint,constants.EmptyNodeId,baseUrl,headers)
+	res, resBody, err := clientlayer.SendGet(timeoutCtx, serverId, constants.ConfigEndpoint,constants.EmptyNodeId,baseUrl,headers)
+	if err != nil {
+		return nil, err
+	}
 
+	err = errorHandle(res.StatusCode, resBody)
 	if err != nil {
 		return nil, err
 	}
@@ -87,8 +92,12 @@ func (s *XrayData) GetLogData(ctx context.Context, serverId string) (logData mod
 		return logData, err
 	}
 
-	resBody, err := clientlayer.SendGet(timeoutCtx, serverId, endpoint, s.nodeId,baseUrl,headers)
+	res,resBody, err := clientlayer.SendGet(timeoutCtx, serverId, endpoint, s.nodeId,baseUrl,headers)
+	if err != nil {
+		return logData, err
+	}
 
+	err = errorHandle(res.StatusCode, resBody)
 	if err != nil {
 		return logData, err
 	}
@@ -128,8 +137,12 @@ func (s *XrayData) getVersion(ctx context.Context, serverId string) (string, err
 	if err != nil {
 		return "", err
 	}
-	resBody, err := clientlayer.SendGet(timeoutCtx, serverId, xrayVersionEndPoint,constants.EmptyNodeId, baseUrl, headers)
+	res, resBody, err := clientlayer.SendGet(timeoutCtx, serverId, xrayVersionEndPoint,constants.EmptyNodeId, baseUrl, headers)
+	if err != nil {
+		return "", err
+	}
 
+	err = errorHandle(res.StatusCode, resBody)
 	if err != nil {
 		return "", err
 	}
@@ -146,6 +159,9 @@ func (s *XrayData) getVersion(ctx context.Context, serverId string) (string, err
 }
 
 func (s *XrayData) checkVersion(ctx context.Context, serverId string) error {
+	if os.Getenv(constants.VersionCheckEnv) == "false" {
+		return nil
+	}
 	currentVersion, err := s.getVersion(ctx, serverId)
 	if err != nil {
 		return err

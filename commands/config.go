@@ -16,6 +16,7 @@ func GetConfigCommand() components.Command {
 		Aliases:     []string{"c"},
 		Arguments:   getConfigArguments(),
 		Flags:       getConfigFlags(),
+		EnvVars:     getConfigEnvVar(),
 		Action:      configCmd,
 	}
 }
@@ -38,6 +39,16 @@ func getConfigFlags() []components.Flag {
 			Name:         "i",
 			Description:  "Activate interactive menu",
 			DefaultValue: false,
+		},
+	}
+}
+
+func getConfigEnvVar() []components.EnvVar {
+	return []components.EnvVar{
+		{
+			Name:        constants.VersionCheckEnv,
+			Default:     "true",
+			Description: "Set this to \"false\" to disable validation on minimum supported version of the product.",
 		},
 	}
 }

@@ -32,8 +32,12 @@ func (s *McData) GetConfig(ctx context.Context, serverId string) (*model.Config,
 	if err != nil {
 		return nil, err
 	}
-	resBody, err := clientlayer.SendGet(timeoutCtx, serverId, constants.ConfigEndpoint,constants.EmptyNodeId, baseUrl, headers)
+	res, resBody, err := clientlayer.SendGet(timeoutCtx, serverId, constants.ConfigEndpoint,constants.EmptyNodeId, baseUrl, headers)
+	if err != nil {
+		return nil, err
+	}
 
+	err = errorHandle(res.StatusCode, resBody)
 	if err != nil {
 		return nil, err
 	}
@@ -71,8 +75,12 @@ func (s *McData) GetLogData(ctx context.Context, serverId string) (logData model
 		return logData, err
 	}
 
-	resBody, err := clientlayer.SendGet(timeoutCtx, serverId, endpoint, s.nodeId, baseUrl, headers)
+	res, resBody, err := clientlayer.SendGet(timeoutCtx, serverId, endpoint, s.nodeId, baseUrl, headers)
+	if err != nil {
+		return logData, err
+	}
 
+	err = errorHandle(res.StatusCode, resBody)
 	if err != nil {
 		return logData, err
 	}

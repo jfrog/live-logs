@@ -9,6 +9,7 @@ import (
 	"github.com/jfrog/live-logs/internal/clientlayer"
 	"github.com/jfrog/live-logs/internal/constants"
 	"github.com/jfrog/live-logs/internal/model"
+	"os"
 	"strings"
 	"time"
 )
@@ -42,8 +43,12 @@ func (s *PipelinesData) GetConfig(ctx context.Context, serverId string) (*model.
 	if err != nil {
 		return nil, err
 	}
-	resBody, err := clientlayer.SendGet(timeoutCtx, serverId, constants.ConfigEndpoint,constants.EmptyNodeId,baseUrl,headers)
+	res, resBody, err := clientlayer.SendGet(timeoutCtx, serverId, constants.ConfigEndpoint,constants.EmptyNodeId,baseUrl,headers)
+	if err != nil {
+		return nil, err
+	}
 
+	err = errorHandle(res.StatusCode, resBody)
 	if err != nil {
 		return nil, err
 	}
@@ -84,8 +89,12 @@ func (s *PipelinesData) GetLogData(ctx context.Context, serverId string) (logDat
 	if err != nil {
 		return logData, err
 	}
-	resBody, err := clientlayer.SendGet(timeoutCtx, serverId, endpoint, s.nodeId, baseUrl,headers)
+	res, resBody, err := clientlayer.SendGet(timeoutCtx, serverId, endpoint, s.nodeId, baseUrl,headers)
+	if err != nil {
+		return logData, err
+	}
 
+	err = errorHandle(res.StatusCode, resBody)
 	if err != nil {
 		return logData, err
 	}
@@ -125,8 +134,13 @@ func (s *PipelinesData) getVersion(ctx context.Context, serverId string) (string
 	if err != nil {
 		return "", err
 	}
-	resBody, err := clientlayer.SendGet(timeoutCtx, serverId, pipelinesVersionEndPoint,constants.EmptyNodeId, baseUrl, headers)
 
+	res,resBody, err := clientlayer.SendGet(timeoutCtx, serverId, pipelinesVersionEndPoint,constants.EmptyNodeId, baseUrl, headers)
+	if err != nil {
+		return "", err
+	}
+
+	err = errorHandle(res.StatusCode, resBody)
 	if err != nil {
 		return "", err
 	}
@@ -144,6 +158,9 @@ func (s *PipelinesData) getVersion(ctx context.Context, serverId string) (string
 }
 
 func (s *PipelinesData) checkVersion(ctx context.Context, serverId string) error {
+	if os.Getenv(constants.VersionCheckEnv) == "false" {
+		return nil
+	}
 	currentVersion, err := s.getVersion(ctx, serverId)
 	if err != nil {
 		return err

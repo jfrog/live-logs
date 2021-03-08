@@ -10,4 +10,5 @@ const (
 	XrayId         = "xr"
 	PipelinesId    = "pl"
 	DistributionId = "ds"
+	VersionCheckEnv = "JFROG_CLI_LIVE_LOG_VERSION_CHECK"
 )

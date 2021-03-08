@@ -66,3 +66,17 @@ func NewService(productId string) (serviceLayer ServiceLayer, err error) {
 	}
 	return serviceLayer, err
 }
+
+func errorHandle(statusCode int, resBody []byte) error{
+	statusCode = 429
+	if statusCode == 200 {
+		return nil
+	}
+	if statusCode == 404 || statusCode == 400 || statusCode == 429 {
+		return fmt.Errorf("status code: %d; message: %s", statusCode, resBody)
+	}
+	if statusCode < 200 || statusCode >= 300 {
+		return fmt.Errorf("unexpected response; status code: %d, message: %s", statusCode, resBody)
+	}
+	return nil
+}

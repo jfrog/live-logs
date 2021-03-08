@@ -15,6 +15,7 @@ func GetLogsCommand() components.Command {
 		Description: "Fetch the log of a desired service",
 		Aliases:     []string{"l"},
 		Arguments:   getLogsArguments(),
+		EnvVars:     getLogsEnvVar(),
 		Flags:       getLogsFlags(),
 		Action:      logsCmd,
 	}
@@ -45,6 +46,16 @@ func getLogsFlags() []components.Flag {
 			Name:         "f",
 			Description:  "Do 'tail -f' on the log",
 			DefaultValue: false,
+		},
+	}
+}
+
+func getLogsEnvVar() []components.EnvVar {
+	return []components.EnvVar{
+		{
+			Name:        constants.VersionCheckEnv,
+			Default:     "true",
+			Description: "Set this to \"false\" to disable validation on minimum supported version of the product.",
 		},
 	}
 }

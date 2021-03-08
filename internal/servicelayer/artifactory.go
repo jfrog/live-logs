@@ -11,6 +11,7 @@ import (
 	"github.com/jfrog/live-logs/internal/model"
 	"strings"
 	"time"
+	"os"
 )
 const (
 	defaultRequestTimeout    = 15 * time.Second
@@ -44,8 +45,12 @@ func (s *ArtifactoryData) GetConfig(ctx context.Context, serverId string) (*mode
 	if err != nil {
 		return nil, err
 	}
-	resBody, err := clientlayer.SendGet(timeoutCtx, serverId, constants.ConfigEndpoint,constants.EmptyNodeId, baseUrl, nil)
+	res, resBody, err := clientlayer.SendGet(timeoutCtx, serverId, constants.ConfigEndpoint,constants.EmptyNodeId, baseUrl, nil)
+	if err != nil {
+		return nil, err
+	}
 
+	err = errorHandle(res.StatusCode, resBody)
 	if err != nil {
 		return nil, err
 	}
@@ -72,8 +77,13 @@ func (s *ArtifactoryData) getVersion(ctx context.Context, serverId string) (stri
 	if err != nil {
 		return "", err
 	}
-	resBody, err := clientlayer.SendGet(timeoutCtx, serverId, artifactoryVersionEndPoint,constants.EmptyNodeId, baseUrl, nil)
 
+	res, resBody, err := clientlayer.SendGet(timeoutCtx, serverId, artifactoryVersionEndPoint,constants.EmptyNodeId, baseUrl, nil)
+	if err != nil {
+		return "", err
+	}
+
+	err = errorHandle(res.StatusCode, resBody)
 	if err != nil {
 		return "", err
 	}
@@ -90,6 +100,9 @@ func (s *ArtifactoryData) getVersion(ctx context.Context, serverId string) (stri
 }
 
 func (s *ArtifactoryData) checkVersion(ctx context.Context, serverId string) error {
+	if os.Getenv(constants.VersionCheckEnv) == "false" {
+		return nil
+	}
 	currentVersion, err := s.getVersion(ctx, serverId)
 	if err != nil {
 		return err
@@ -125,8 +138,12 @@ func (s *ArtifactoryData) GetLogData(ctx context.Context, serverId string) (logD
 		return logData, err
 	}
 
-	resBody, err := clientlayer.SendGet(timeoutCtx, serverId, endpoint, s.nodeId, baseUrl, nil)
+	res, resBody, err := clientlayer.SendGet(timeoutCtx, serverId, endpoint, s.nodeId, baseUrl, nil)
+	if err != nil {
+		return logData, err
+	}
 
+	err = errorHandle(res.StatusCode, resBody)
 	if err != nil {
 		return logData, err
 	}
