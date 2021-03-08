@@ -45,6 +45,15 @@ func ValidateArgument(argumentName string, wantedVal string, allValues []string)
 	return nil
 }
 
+// Disaply a message and wait for any key to be entered to continue
+func PromptAndWaitForAnyKey(promptPrefix string)  {
+	promptPrefix += " Press any key to continue"
+	var answer string
+	fmt.Print(promptPrefix)
+	_, _ = fmt.Scanln(&answer)
+	return
+}
+
 func FetchAllProductIds() []string {
     productIds := []string{constants.ArtifactoryId, constants.XrayId, constants.McId, constants.PipelinesId, constants.DistributionId}
 	return productIds

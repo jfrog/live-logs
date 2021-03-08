@@ -5,6 +5,7 @@ import (
 	"fmt"
 	cliCommands "github.com/jfrog/jfrog-cli-core/common/commands"
 	"github.com/jfrog/live-logs/internal"
+	"github.com/jfrog/live-logs/internal/constants"
 	"github.com/jfrog/live-logs/internal/model"
 	"github.com/jfrog/live-logs/internal/util"
 	"github.com/manifoldco/promptui"
@@ -38,6 +39,10 @@ func ConfigInteractive(ctx context.Context, liveLog livelog.LiveLogs) error {
 	}
 
 	liveLog.SetServiceId(selectedCliServerId)
+	nonInteractiveMessage := constants.NonIntCmdDisplayPrefix + " [ jfrog live-logs config " +
+		selectedProductId + " " +
+		selectedCliServerId + " ]."
+	util.PromptAndWaitForAnyKey(nonInteractiveMessage)
 	return liveLog.DisplayConfig(ctx)
 }
 
@@ -69,6 +74,18 @@ func LogInteractiveMenu(ctx context.Context, isStreaming bool, liveLog livelog.L
 		return err
 	}
 	liveLog.SetLogsRefreshRate(logsRefreshRate)
+
+	cmdDisplayPostfix:=" ]."
+	if isStreaming {
+		cmdDisplayPostfix = " -"+ constants.TailFlag + cmdDisplayPostfix
+	}
+
+	nonInteractiveMessage := constants.NonIntCmdDisplayPrefix + " [ jfrog live-logs logs " +
+								selectedProductId + " " +
+								selectedCliServerId + " " +
+								nodeId + " " +
+								logName + cmdDisplayPostfix
+	util.PromptAndWaitForAnyKey(nonInteractiveMessage)
 	return liveLog.PrintLogs(ctx, nodeId, logName, isStreaming)
 }
 

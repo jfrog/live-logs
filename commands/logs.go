@@ -38,13 +38,13 @@ func getLogsArguments() []components.Argument {
 func getLogsFlags() []components.Flag {
 	return []components.Flag{
 		components.BoolFlag{
-			Name:         "i",
+			Name:         constants.InteractiveFlag,
 			Description:  "Activate interactive menu",
 			DefaultValue: false,
 		},
 		components.BoolFlag{
-			Name:         "f",
-			Description:  "Do 'tail -f' on the log",
+			Name:         constants.TailFlag,
+			Description:  "Do 'tail " + constants.TailFlag + "' on the log",
 			DefaultValue: false,
 		},
 	}
@@ -61,8 +61,8 @@ func getLogsEnvVar() []components.EnvVar {
 }
 
 func logsCmd(c *components.Context) error {
-	isStreaming := c.GetBoolFlagValue("f")
-	isInteractive := c.GetBoolFlagValue("i")
+	isStreaming := c.GetBoolFlagValue(constants.TailFlag)
+	isInteractive := c.GetBoolFlagValue(constants.InteractiveFlag)
 
 	mainCtx, mainCtxCancel := context.WithCancel(context.Background())
 	defer mainCtxCancel()

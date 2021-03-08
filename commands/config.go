@@ -36,7 +36,7 @@ func getConfigArguments() []components.Argument {
 func getConfigFlags() []components.Flag {
 	return []components.Flag{
 		components.BoolFlag{
-			Name:         "i",
+			Name:         constants.InteractiveFlag,
 			Description:  "Activate interactive menu",
 			DefaultValue: false,
 		},
@@ -54,7 +54,7 @@ func getConfigEnvVar() []components.EnvVar {
 }
 
 func configCmd(c *components.Context) error {
-	isInteractive := c.GetBoolFlagValue("i")
+	isInteractive := c.GetBoolFlagValue(constants.InteractiveFlag)
 
 	mainCtx, mainCtxCancel := context.WithCancel(context.Background())
 	defer mainCtxCancel()

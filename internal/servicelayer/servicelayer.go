@@ -68,7 +68,6 @@ func NewService(productId string) (serviceLayer ServiceLayer, err error) {
 }
 
 func errorHandle(statusCode int, resBody []byte) error{
-	statusCode = 429
 	if statusCode == 200 {
 		return nil
 	}
