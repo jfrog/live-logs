@@ -23,7 +23,7 @@ func GetLogsCommand() components.Command {
 
 func getLogsArguments() []components.Argument {
 	return []components.Argument{
-		{Name: "product-id", Description: "JFrog product id, value can be one of the following, \n" +
+		{Name: "product-id", Description: "JFrog product id; the value can be one of the following, \n" +
 			"\t\t\t" + constants.ArtifactoryId + " - Artifactory\n" +
 			"\t\t\t" + constants.XrayId + " - Xray\n" +
 			"\t\t\t" + constants.McId + " - Mission Control\n" +
@@ -39,12 +39,12 @@ func getLogsFlags() []components.Flag {
 	return []components.Flag{
 		components.BoolFlag{
 			Name:         constants.InteractiveFlag,
-			Description:  "Activate interactive menu",
+			Description:  "Activate the interactive menu",
 			DefaultValue: false,
 		},
 		components.BoolFlag{
 			Name:         constants.TailFlag,
-			Description:  "Do 'tail " + constants.TailFlag + "' on the log",
+			Description:  "Perform a 'tail " + constants.TailFlag + "' on the log",
 			DefaultValue: false,
 		},
 	}
@@ -55,7 +55,7 @@ func getLogsEnvVar() []components.EnvVar {
 		{
 			Name:        constants.VersionCheckEnv,
 			Default:     "true",
-			Description: "Set this to \"false\" to disable validation on minimum supported version of the product.",
+			Description: "Set this to \"false\" to disable validation on the minimum supported version of the product.",
 		},
 	}
 }
@@ -74,7 +74,7 @@ func logsCmd(c *components.Context) error {
 
 	if !isInteractive {
 		if len(c.Arguments) != 4 {
-			return fmt.Errorf("wrong number of arguments. Expected: 4, " + "Received: " + strconv.Itoa(len(c.Arguments)))
+			return fmt.Errorf("incorrect number of arguments were passed: expected: 4," + " received: " + strconv.Itoa(len(c.Arguments)))
 		}
 		productId := c.Arguments[0]
 		serverId := c.Arguments[1]

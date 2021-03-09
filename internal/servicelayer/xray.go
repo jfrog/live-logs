@@ -117,10 +117,10 @@ func (s *XrayData) getConnectionDetails(serverId string)(url string, headers map
 	url = confDetails.GetXrayUrl()
 	accessToken := confDetails.GetAccessToken()
 	if url == "" {
-		return "",nil, fmt.Errorf("xray url is not found in serverId : %s, please make sure you using latest version of Jfrog CLI",serverId)
+		return "",nil, fmt.Errorf("the Xray url was not found in the serverId : %s; verify that you are using the latest version of the JFrog CLI",serverId)
 	}
 	if accessToken == "" {
-		return "",nil, fmt.Errorf("no access token found in serverId : %s, this is mandatory to connect to Xray product",serverId)
+		return "",nil, fmt.Errorf("no access token found in the serverId : %s; the tokens mandatory for connecting to Xray",serverId)
 	}
 
 	headers = make(map[string]string)
@@ -172,7 +172,7 @@ func (s *XrayData) checkVersion(ctx context.Context, serverId string) error {
 	versionHelper := cliVersionHelper.NewVersion(xrayMinVersionSupport)
 
 	if versionHelper.Compare(currentVersion) < 0 {
-		return fmt.Errorf("found Xray version as %s, minimum supported version is %s", currentVersion, xrayMinVersionSupport)
+		return fmt.Errorf("found Xray version as %s; the minimum supported version is %s", currentVersion, xrayMinVersionSupport)
 	}
 	return nil
 }

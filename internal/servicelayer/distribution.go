@@ -106,10 +106,10 @@ func (s *DistributionData) getConnectionDetails(serverId string)(url string, hea
 	url = confDetails.GetDistributionUrl()
 	accessToken := confDetails.GetAccessToken()
 	if url == "" {
-		return "",nil, fmt.Errorf("distribution url is not found in serverId : %s, please make sure you using latest version of Jfrog CLI",serverId)
+		return "",nil, fmt.Errorf("the Distribution url was not found in the serverId : %s; verify that you are using the latest version of the JFrog CLI",serverId)
 	}
 	if accessToken == "" {
-		return "",nil, fmt.Errorf("no access token found in serverId : %s, this is mandatory to connect to Distribution product",serverId)
+		return "",nil, fmt.Errorf("no access token found in the serverId : %s; the tokens mandatory for connecting to Distribution",serverId)
 	}
 
 	headers = make(map[string]string)

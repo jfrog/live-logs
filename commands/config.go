@@ -23,7 +23,7 @@ func GetConfigCommand() components.Command {
 
 func getConfigArguments() []components.Argument {
 	return []components.Argument{
-		{Name: "product-id", Description: "JFrog product id, value can be one of the following, \n" +
+		{Name: "product-id", Description: "JFrog product id; the value can be one of the following, \n" +
 			"\t\t\t" + constants.ArtifactoryId + " - Artifactory\n" +
 			"\t\t\t" + constants.XrayId + " - Xray\n" +
 			"\t\t\t" + constants.McId + " - Mission Control\n" +
@@ -37,7 +37,7 @@ func getConfigFlags() []components.Flag {
 	return []components.Flag{
 		components.BoolFlag{
 			Name:         constants.InteractiveFlag,
-			Description:  "Activate interactive menu",
+			Description:  "Activate the interactive menu",
 			DefaultValue: false,
 		},
 	}
@@ -64,7 +64,7 @@ func configCmd(c *components.Context) error {
 
 	if !isInteractive {
 		if len(c.Arguments) != 2 {
-			return fmt.Errorf("wrong number of arguments. Expected: 2, " + "Received: " + strconv.Itoa(len(c.Arguments)))
+			return fmt.Errorf("incorrect number of arguments were passed: expected: 2," + " received: " + strconv.Itoa(len(c.Arguments)))
 		}
 		productId := c.Arguments[0]
 		serverId := c.Arguments[1]

@@ -9,13 +9,6 @@ import (
 	"time"
 )
 
-type ServiceData struct {
-	nodeId          string
-	logFileName     string
-	lastPageMarker  int64
-	logsRefreshRate time.Duration
-}
-
 type ServiceLayer interface {
 	// Queries and returns the livelog configuration from the remote service, based on the set node id.
 	GetConfig(ctx context.Context, serverId string) (*model.Config, error)

@@ -162,7 +162,7 @@ func (s *ArtifactoryData) getUrl(serverId string)(url string,_ error){
 	}
 	url = confDetails.GetArtifactoryUrl()
 	if url == "" {
-		return "", fmt.Errorf("artifactory url is not found in serverId : %s, please make sure you using latest version of Jfrog CLI", serverId)
+		return "", fmt.Errorf("the Artifactory url was not found in the serverId : %s; verify that you are using the latest version of the JFrog CLI", serverId)
 	}
 	return url, nil
 }

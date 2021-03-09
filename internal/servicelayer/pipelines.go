@@ -114,10 +114,10 @@ func (s *PipelinesData) getConnectionDetails(serverId string)(url string, header
 	url = confDetails.GetPipelinesUrl()
 	accessToken := confDetails.GetAccessToken()
 	if url == "" {
-		return "",nil, fmt.Errorf("pipelines url is not found in serverId : %s, please make sure you using latest version of Jfrog CLI",serverId)
+		return "",nil, fmt.Errorf("the Pipelines url was not found in the serverId : %s; verify that you are using the latest version of the JFrog CLI",serverId)
 	}
 	if accessToken == "" {
-		return "",nil, fmt.Errorf("no access token found in serverId : %s, this is mandatory to connect to Pipelines product",serverId)
+		return "",nil, fmt.Errorf("no access token found in the serverId : %s; the tokens mandatory for connecting to Pipelines",serverId)
 	}
 
 	headers = make(map[string]string)
@@ -171,7 +171,7 @@ func (s *PipelinesData) checkVersion(ctx context.Context, serverId string) error
 	versionHelper := cliVersionHelper.NewVersion(pipelinesMinVersionSupport)
 
 	if versionHelper.Compare(currentVersion) < 0 {
-		return fmt.Errorf("found JFrog Pipelines version as %s, minimum supported version is %s", currentVersion, pipelinesMinVersionSupport)
+		return fmt.Errorf("found Pipelines version as %s, minimum supported version is %s", currentVersion, pipelinesMinVersionSupport)
 	}
 	return nil
 }

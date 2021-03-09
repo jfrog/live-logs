@@ -39,9 +39,9 @@ func ConfigInteractive(ctx context.Context, liveLog livelog.LiveLogs) error {
 	}
 
 	liveLog.SetServiceId(selectedCliServerId)
-	nonInteractiveMessage := constants.NonIntCmdDisplayPrefix + " [ jfrog live-logs config " +
+	nonInteractiveMessage := constants.NonIntCmdDisplayPrefix + " \n\t jfrog live-logs config " +
 		selectedProductId + " " +
-		selectedCliServerId + " ]."
+		selectedCliServerId
 	util.PromptAndWaitForAnyKey(nonInteractiveMessage)
 	return liveLog.DisplayConfig(ctx)
 }
@@ -75,12 +75,12 @@ func LogInteractiveMenu(ctx context.Context, isStreaming bool, liveLog livelog.L
 	}
 	liveLog.SetLogsRefreshRate(logsRefreshRate)
 
-	cmdDisplayPostfix:=" ]."
+	cmdDisplayPostfix:=""
 	if isStreaming {
 		cmdDisplayPostfix = " -"+ constants.TailFlag + cmdDisplayPostfix
 	}
 
-	nonInteractiveMessage := constants.NonIntCmdDisplayPrefix + " [ jfrog live-logs logs " +
+	nonInteractiveMessage := constants.NonIntCmdDisplayPrefix + " \n\t jfrog live-logs logs " +
 								selectedProductId + " " +
 								selectedCliServerId + " " +
 								nodeId + " " +

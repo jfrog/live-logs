@@ -18,21 +18,21 @@ func TestLogCmdArguments(t *testing.T) {
 			ctx: &components.Context{
 				Arguments: []string{},
 			},
-			wantErrMsgPrefix: "wrong number of arguments",
+			wantErrMsgPrefix: "incorrect number of arguments",
 		},
 		{
 			name: "one argument",
 			ctx: &components.Context{
 				Arguments: []string{"a"},
 			},
-			wantErrMsgPrefix: "wrong number of arguments",
+			wantErrMsgPrefix: "incorrect number of arguments",
 		},
 		{
 			name: "two argument",
 			ctx: &components.Context{
 				Arguments: []string{"a", "b"},
 			},
-			wantErrMsgPrefix: "wrong number of arguments",
+			wantErrMsgPrefix: "incorrect number of arguments",
 		},
 		{
 			name: "three argument",
@@ -46,14 +46,14 @@ func TestLogCmdArguments(t *testing.T) {
 			ctx: &components.Context{
 				Arguments: []string{"a", "b", "c", "d","e"},
 			},
-			wantErrMsgPrefix: "wrong number of arguments",
+			wantErrMsgPrefix: "incorrect number of arguments",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := logsCmd(tt.ctx)
 			assert.NotNil(t, err)
-			assert.True(t, strings.HasPrefix(err.Error(), tt.wantErrMsgPrefix))
+			assert.True(t, strings.Contains(err.Error(), tt.wantErrMsgPrefix))
 		})
 	}
 }

@@ -47,7 +47,7 @@ func ValidateArgument(argumentName string, wantedVal string, allValues []string)
 
 // Disaply a message and wait for any key to be entered to continue
 func PromptAndWaitForAnyKey(promptPrefix string)  {
-	promptPrefix += " Press any key to continue"
+	promptPrefix += "\nPress any key to continue"
 	var answer string
 	fmt.Print(promptPrefix)
 	_, _ = fmt.Scanln(&answer)

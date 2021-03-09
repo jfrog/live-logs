@@ -100,10 +100,10 @@ func (s *McData) getConnectionDetails(serverId string)(url string, headers map[s
 	url = confDetails.GetMissionControlUrl()
 	accessToken := confDetails.GetAccessToken()
 	if url == "" {
-		return "",nil, fmt.Errorf("mission control url is not found in serverId : %s, make sure you using latest version of Jfrog CLI",serverId)
+		return "",nil, fmt.Errorf("the Mission Control url was not found in the serverId : %s; verify that you are using the latest version of the JFrog CLI",serverId)
 	}
 	if accessToken == "" {
-		return "",nil, fmt.Errorf("no access token found in serverId : %s, this is mandatory to connect to Mission Control product",serverId)
+		return "",nil, fmt.Errorf("no access token found in the serverId : %s; the tokens mandatory for connecting to Mission Control",serverId)
 	}
 
 	headers = make(map[string]string)

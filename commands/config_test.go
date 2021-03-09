@@ -1,7 +1,6 @@
 package commands
 
 import (
-	//"fmt"
 	"github.com/jfrog/jfrog-cli-core/plugins/components"
 	"github.com/stretchr/testify/assert"
 	"strings"
@@ -19,14 +18,14 @@ func TestConfigCmdArguments(t *testing.T) {
 			ctx: &components.Context{
 				Arguments: []string{},
 			},
-			wantErrMsgPrefix: "wrong number of arguments",
+			wantErrMsgPrefix: "incorrect number of arguments",
 		},
 		{
 			name: "one argument",
 			ctx: &components.Context{
 				Arguments: []string{"a"},
 			},
-			wantErrMsgPrefix: "wrong number of arguments",
+			wantErrMsgPrefix: "incorrect number of arguments",
 		},
 		{
 			name: "two argument",
@@ -40,14 +39,14 @@ func TestConfigCmdArguments(t *testing.T) {
 			ctx: &components.Context{
 				Arguments: []string{"a", "b", "c"},
 			},
-			wantErrMsgPrefix: "wrong number of arguments",
+			wantErrMsgPrefix: "incorrect number of arguments",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := configCmd(tt.ctx)
 			assert.NotNil(t, err)
-			assert.True(t, strings.HasPrefix(err.Error(), tt.wantErrMsgPrefix))
+			assert.True(t, strings.Contains(err.Error(), tt.wantErrMsgPrefix))
 		})
 	}
 }

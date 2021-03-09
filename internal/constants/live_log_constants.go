@@ -11,7 +11,7 @@ const (
 	PipelinesId    = "pl"
 	DistributionId = "ds"
 	VersionCheckEnv = "JFROG_CLI_LIVE_LOG_VERSION_CHECK"
-	NonIntCmdDisplayPrefix = "The equivalent noninteractive command"
+	NonIntCmdDisplayPrefix = "You can also use the following non-interactive equivalent command,"
 	TailFlag = "f"
 	InteractiveFlag = "i"
 )

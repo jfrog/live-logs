@@ -6,8 +6,8 @@ You also have the ability to `cat` and `tail -f` any log on any product node.<br
 
 **Important:** The Live Logs plugin is available to On-Prem customers and to Cloud customers who are Enterprise+ subscriptions. Admin permissions are required to run this plugin.
 
-## Installation with JFrog CLI
-Since this plugin is currently not included in [JFrog CLI Plugins Registry](https://github.com/jfrog/jfrog-cli-plugins-reg), you will need to build and install it manually. Follow these steps to install and use this plugin with JFrog CLI.
+## Installation of local binary with JFrog CLI
+Follow these steps to install and use this plugin with JFrog CLI.
 1. Verify that JFrog CLI is installed on your machine by running ```jfrog```; if it is not installed, install it (see [Installing JFrog CLI](https://jfrog.com/getcli/).
 2. Create a directory named ```plugins``` under ```~/.jfrog/``` if it does not exist already.
 3. Clone this repository.
@@ -15,9 +15,89 @@ Since this plugin is currently not included in [JFrog CLI Plugins Registry](http
 5. Run ```make build``` to create the binary in the current directory.
 6. Copy the binary into the ```~/.jfrog/plugins``` directory.
 
+## Installation with JFrog CLI
+Installing the latest version:
+```
+jfrog plugin install live-logs
+```
+
+Installing a specific version:
+```
+jfrog plugin install live-logs@version
+```
+
+Uninstalling a plugin
+```
+jfrog plugin uninstall live-logs
+```
+
+## Note:
+- Xray, Mission Control, Pipelines, and Distribution **only support admin access token authentication**, while, Artifactory supports all types of authentication.
+- For every product, a new dedicated entry will need to be added. For example, if you want to stream logs from 3 products, a separate entry will need to be configured for each product in the JFrog CLI (so is 3 entries).
+
+## CLI Configuration by Product
+
+### Configuring Artifactory
+1. Add a new server using,
+
+    ```
+    jfrog config add
+    ```
+2. Add the Artifactory url and authentication details.
+
+### Configuring Mission Control
+1. Add a new server using,
+
+    ```
+    jfrog config add
+    ```
+2. Add the Mission Control url.
+3. Generate the access token for Mission Control (see [Generating Admin Tokens](https://www.jfrog.com/confluence/display/JFROG/Access+Tokens#AccessTokens-GeneratingAdminTokens)).
+4. Add the access token you generated for Mission Control.
+
+### Configuring Xray
+1. Add a new server using,
+
+    ```
+    jfrog config add
+    ```
+2. Add the Xray url.
+3. Generate the access token for Xray (see [Generating Admin Tokens](https://www.jfrog.com/confluence/display/JFROG/Access+Tokens#AccessTokens-GeneratingAdminTokens)).
+4. Add the access token you generated for Xray.
+
+### Configuring Distribution
+1. Add a new server using,
+
+    ```
+    jfrog config add
+    ```
+2. Add the Distribution url.
+3. Generate the access token for Distribution (see [Generating Admin Tokens](https://www.jfrog.com/confluence/display/JFROG/Access+Tokens#AccessTokens-GeneratingAdminTokens)).
+4. Add the access token you generated for Distribution as follows.
+
+### Configuring Pipelines
+1. Add a new server using,
+
+    ```
+    jfrog config add
+    ```
+2. Add the Pipelines url.
+3. Generate the access token for Pipelines (see [Generating Admin Tokens](https://www.jfrog.com/confluence/display/JFROG/Access+Tokens#AccessTokens-GeneratingAdminTokens)).
+4. Add the access token you generated for Pipelines.
+
 ## Usage
 ### Commands
+* help
+    ```
+    jfrog live-logs help
+    jfrog live-logs logs help  
+    jfrog live-logs config help
+    ```
 * logs
+  
+    ```
+    jfrog live-logs logs <product-id> <server-id> <node-id> <log-name> [Flags]
+    ```
     - Arguments:
         - product-id - This is the ID of product, which can be one of the following,
             - rt - Artifactory
@@ -54,6 +134,8 @@ Since this plugin is currently not included in [JFrog CLI Plugins Registry](http
   ```
 
 * config
+
+  ```jfrog live-logs config <product-id> <server-id> [Flags]```
     - Arguments:
         - product-id - The ID of product, which can be one of the following,
             - rt - Artifactory
@@ -113,4 +195,11 @@ The release notes are available [here](RELEASE.md).
 ## Additional Information
 Live Logs are viewable through the JFrog Platform, and are configured through the system.yaml file. For more information, see [Enabling the Live Log Feature](https://www.jfrog.com/confluence/display/JFROG/Logging+-+Temp#Logging-EnablingtheLiveLogFeature).
 
-In addition, there are two APIs used with this plugin; for more information, see [Live Logs Plugin](https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API#ArtifactoryRESTAPI-LiveLogsPlugin).
+In addition, there are two APIs used with this plugin; for more information, see [Live Logs Plugin](https://www.jfrog.com/confluence/display/JFROG/Live+Logs#LiveLogs-EnablingtheLiveLogsPlugin).
+
+## Contributions
+A big THANK YOU to the developers for coming up with this idea and building the core!
+
+[omerkay](https://github.com/omerkay)
+
+[hanoch-jfrog](https://github.com/hanoch-jfrog)
