@@ -16,6 +16,8 @@ import (
 
 const (
 	xrayVersionEndPoint = "api/v1/system/version"
+	xrayConfigEndpoint = "api/v1/system/logs/config"
+	xrayDataEndpoint   = "api/v1/system/logs/data"
 	xrayMinVersionSupport = "3.18.0"
 )
 
@@ -44,7 +46,7 @@ func (s *XrayData) GetConfig(ctx context.Context, serverId string) (*model.Confi
 	if err != nil {
 		return nil, err
 	}
-	res, resBody, err := clientlayer.SendGet(timeoutCtx, serverId, constants.ConfigEndpoint,constants.EmptyNodeId,baseUrl,headers)
+	res, resBody, err := clientlayer.SendGet(timeoutCtx, serverId, xrayConfigEndpoint,constants.EmptyNodeId,baseUrl,headers)
 	if err != nil {
 		return nil, err
 	}
@@ -85,7 +87,7 @@ func (s *XrayData) GetLogData(ctx context.Context, serverId string) (logData mod
 	defer cancelTimeout()
 
 	var endpoint string
-	endpoint = fmt.Sprintf("%s?file_size=%d&id=%s", constants.DataEndpoint, s.lastPageMarker, s.logFileName)
+	endpoint = fmt.Sprintf("%s?file_size=%d&id=%s", xrayDataEndpoint, s.lastPageMarker, s.logFileName)
 
 	baseUrl, headers, err := s.getConnectionDetails(serverId)
 	if err != nil {

@@ -19,6 +19,8 @@ const (
 	defaultLogsRefreshRate   = time.Second
 	artifactoryVersionEndPoint = "api/system/version"
 	artifactoryMinVersionSupport = "7.16.0"
+	artifactoryConfigEndpoint = "api/system/logs/config"
+	artifactoryDataEndpoint   = "api/system/logs/data"
 )
 
 type ArtifactoryData struct {
@@ -45,7 +47,7 @@ func (s *ArtifactoryData) GetConfig(ctx context.Context, serverId string) (*mode
 	if err != nil {
 		return nil, err
 	}
-	res, resBody, err := clientlayer.SendGet(timeoutCtx, serverId, constants.ConfigEndpoint,constants.EmptyNodeId, baseUrl, nil)
+	res, resBody, err := clientlayer.SendGet(timeoutCtx, serverId, artifactoryConfigEndpoint,constants.EmptyNodeId, baseUrl, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -132,7 +134,7 @@ func (s *ArtifactoryData) GetLogData(ctx context.Context, serverId string) (logD
 	defer cancelTimeout()
 
 	var endpoint string
-	endpoint = fmt.Sprintf("%s?file_size=%d&id=%s", constants.DataEndpoint, s.lastPageMarker, s.logFileName)
+	endpoint = fmt.Sprintf("%s?file_size=%d&id=%s", artifactoryDataEndpoint, s.lastPageMarker, s.logFileName)
 	baseUrl, err := s.getUrl(serverId)
 	if err != nil {
 		return logData, err

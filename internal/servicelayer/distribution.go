@@ -17,6 +17,8 @@ import (
 const (
 	distributionVersionEndPoint = "api/v1/system/info"
 	distributionMinVersionSupport = "2.7.0"
+	distributionConfigEndpoint = "api/v1/system/logs/config"
+	distributionDataEndpoint   = "api/v1/system/logs/data"
 )
 
 type DistributionData struct {
@@ -40,7 +42,7 @@ func (s *DistributionData) GetConfig(ctx context.Context, serverId string) (*mod
 		return nil, err
 	}
 
-	res, resBody, err := clientlayer.SendGet(timeoutCtx, serverId, constants.ConfigEndpoint,constants.EmptyNodeId,baseUrl,headers)
+	res, resBody, err := clientlayer.SendGet(timeoutCtx, serverId, distributionConfigEndpoint,constants.EmptyNodeId,baseUrl,headers)
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +78,7 @@ func (s *DistributionData) GetLogData(ctx context.Context, serverId string) (log
 	defer cancelTimeout()
 
 	var endpoint string
-	endpoint = fmt.Sprintf("%s?file_size=%d&id=%s", constants.DataEndpoint, s.lastPageMarker, s.logFileName)
+	endpoint = fmt.Sprintf("%s?file_size=%d&id=%s", distributionDataEndpoint, s.lastPageMarker, s.logFileName)
 	baseUrl, headers, err := s.getConnectionDetails(serverId)
 	if err != nil {
 		return logData, err

@@ -17,6 +17,8 @@ import (
 const (
 	pipelinesVersionEndPoint = "api/v1/system/info"
 	pipelinesMinVersionSupport = "1.13.0"
+	pipelinesConfigEndpoint = "api/v1/system/logs/config"
+	pipelinesDataEndpoint   = "api/v1/system/logs/data"
 )
 
 type pipelinesVersionData struct {
@@ -43,7 +45,7 @@ func (s *PipelinesData) GetConfig(ctx context.Context, serverId string) (*model.
 	if err != nil {
 		return nil, err
 	}
-	res, resBody, err := clientlayer.SendGet(timeoutCtx, serverId, constants.ConfigEndpoint,constants.EmptyNodeId,baseUrl,headers)
+	res, resBody, err := clientlayer.SendGet(timeoutCtx, serverId, pipelinesConfigEndpoint,constants.EmptyNodeId,baseUrl,headers)
 	if err != nil {
 		return nil, err
 	}
@@ -84,7 +86,7 @@ func (s *PipelinesData) GetLogData(ctx context.Context, serverId string) (logDat
 	defer cancelTimeout()
 
 	var endpoint string
-	endpoint = fmt.Sprintf("%s?file_size=%d&id=%s", constants.DataEndpoint, s.lastPageMarker, s.logFileName)
+	endpoint = fmt.Sprintf("%s?file_size=%d&id=%s", pipelinesDataEndpoint, s.lastPageMarker, s.logFileName)
 	baseUrl, headers, err := s.getConnectionDetails(serverId)
 	if err != nil {
 		return logData, err

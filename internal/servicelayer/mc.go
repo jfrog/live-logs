@@ -18,9 +18,10 @@ type McData struct {
 	logsRefreshRate time.Duration
 }
 
-func NewMcServiceLayer() *McData{
-	return &McData{}
-}
+const (
+	mcConfigEndpoint = "api/v1/system/logs/config"
+	mcDataEndpoint   = "api/v1/system/logs/data"
+)
 
 func (s *McData) GetConfig(ctx context.Context, serverId string) (*model.Config, error) {
 
@@ -32,7 +33,7 @@ func (s *McData) GetConfig(ctx context.Context, serverId string) (*model.Config,
 	if err != nil {
 		return nil, err
 	}
-	res, resBody, err := clientlayer.SendGet(timeoutCtx, serverId, constants.ConfigEndpoint,constants.EmptyNodeId, baseUrl, headers)
+	res, resBody, err := clientlayer.SendGet(timeoutCtx, serverId, mcConfigEndpoint,constants.EmptyNodeId, baseUrl, headers)
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +69,7 @@ func (s *McData) GetLogData(ctx context.Context, serverId string) (logData model
 	defer cancelTimeout()
 
 	var endpoint string
-	endpoint = fmt.Sprintf("%s?file_size=%d&id=%s", constants.DataEndpoint, s.lastPageMarker, s.logFileName)
+	endpoint = fmt.Sprintf("%s?file_size=%d&id=%s", mcDataEndpoint, s.lastPageMarker, s.logFileName)
 
 	baseUrl, headers, err := s.getConnectionDetails(serverId)
 	if err != nil {
