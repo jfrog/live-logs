@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	cliCommands "github.com/jfrog/jfrog-cli-core/common/commands"
-	cliVersionHelper "github.com/jfrog/jfrog-client-go/utils/version"
 	"github.com/jfrog/live-logs/internal/clientlayer"
 	"github.com/jfrog/live-logs/internal/constants"
 	"github.com/jfrog/live-logs/internal/model"
@@ -19,6 +18,7 @@ const (
 	xrayConfigEndpoint = "api/v1/system/logs/config"
 	xrayDataEndpoint   = "api/v1/system/logs/data"
 	xrayMinVersionSupport = "3.18.0"
+	xrayProductName = "Xray"
 )
 
 type xrayVersionData struct {
@@ -34,7 +34,7 @@ type XrayData struct {
 
 func (s *XrayData) GetConfig(ctx context.Context, serverId string) (*model.Config, error) {
 
-	err := s.checkVersion(ctx, serverId)
+	err := s.XrayValidations(ctx, serverId)
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +78,7 @@ func (s *XrayData) GetLogData(ctx context.Context, serverId string) (logData mod
 		return logData, fmt.Errorf("log file name must be set")
 	}
 
-	err = s.checkVersion(ctx, serverId)
+	err = s.XrayValidations(ctx, serverId)
 	if err != nil {
 		return logData, err
 	}
@@ -160,24 +160,19 @@ func (s *XrayData) getVersion(ctx context.Context, serverId string) (string, err
 	return strings.TrimSpace(versionData.Version), nil
 }
 
-func (s *XrayData) checkVersion(ctx context.Context, serverId string) error {
+func (s *XrayData) XrayValidations(ctx context.Context, serverId string) error {
 	if os.Getenv(constants.VersionCheckEnv) == "false" {
 		return nil
 	}
+
 	currentVersion, err := s.getVersion(ctx, serverId)
 	if err != nil {
 		return err
 	}
-	if currentVersion == "" {
-		return fmt.Errorf("api returned an empty version")
-	}
-	versionHelper := cliVersionHelper.NewVersion(xrayMinVersionSupport)
 
-	if versionHelper.Compare(currentVersion) < 0 {
-		return fmt.Errorf("found Xray version as %s; the minimum supported version is %s", currentVersion, xrayMinVersionSupport)
-	}
-	return nil
+	return checkVersion(currentVersion, xrayMinVersionSupport, xrayProductName)
 }
+
 
 func (s *XrayData) SetNodeId(nodeId string) {
 	s.nodeId = nodeId

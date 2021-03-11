@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	cliCommands "github.com/jfrog/jfrog-cli-core/common/commands"
-	cliVersionHelper "github.com/jfrog/jfrog-client-go/utils/version"
 	"github.com/jfrog/live-logs/internal/clientlayer"
 	"github.com/jfrog/live-logs/internal/constants"
 	"github.com/jfrog/live-logs/internal/model"
@@ -19,6 +18,7 @@ const (
 	pipelinesMinVersionSupport = "1.13.0"
 	pipelinesConfigEndpoint = "api/v1/system/logs/config"
 	pipelinesDataEndpoint   = "api/v1/system/logs/data"
+	pipelinesProductName = "Pipelines"
 )
 
 type pipelinesVersionData struct {
@@ -34,7 +34,7 @@ type PipelinesData struct {
 
 func (s *PipelinesData) GetConfig(ctx context.Context, serverId string) (*model.Config, error) {
 
-	err := s.checkVersion(ctx, serverId)
+	err := s.PipelinesValidations(ctx, serverId)
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +77,7 @@ func (s *PipelinesData) GetLogData(ctx context.Context, serverId string) (logDat
 		return logData, fmt.Errorf("log file name must be set")
 	}
 
-	err = s.checkVersion(ctx, serverId)
+	err = s.PipelinesValidations(ctx, serverId)
 	if err != nil {
 		return logData, err
 	}
@@ -159,23 +159,17 @@ func (s *PipelinesData) getVersion(ctx context.Context, serverId string) (string
 	return strings.TrimSpace(versionData.Version), nil
 }
 
-func (s *PipelinesData) checkVersion(ctx context.Context, serverId string) error {
+func (s *PipelinesData) PipelinesValidations(ctx context.Context, serverId string) error {
 	if os.Getenv(constants.VersionCheckEnv) == "false" {
 		return nil
 	}
+
 	currentVersion, err := s.getVersion(ctx, serverId)
 	if err != nil {
 		return err
 	}
-	if currentVersion == "" {
-		return fmt.Errorf("api returned an empty version")
-	}
-	versionHelper := cliVersionHelper.NewVersion(pipelinesMinVersionSupport)
 
-	if versionHelper.Compare(currentVersion) < 0 {
-		return fmt.Errorf("found Pipelines version as %s, minimum supported version is %s", currentVersion, pipelinesMinVersionSupport)
-	}
-	return nil
+	return checkVersion(currentVersion, pipelinesMinVersionSupport, pipelinesProductName)
 }
 
 func (s *PipelinesData) SetNodeId(nodeId string) {

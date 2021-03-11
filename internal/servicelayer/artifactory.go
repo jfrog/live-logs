@@ -5,13 +5,12 @@ import (
 	"encoding/json"
 	"fmt"
 	cliCommands "github.com/jfrog/jfrog-cli-core/common/commands"
-	cliVersionHelper "github.com/jfrog/jfrog-client-go/utils/version"
 	"github.com/jfrog/live-logs/internal/clientlayer"
 	"github.com/jfrog/live-logs/internal/constants"
 	"github.com/jfrog/live-logs/internal/model"
+	"os"
 	"strings"
 	"time"
-	"os"
 )
 const (
 	defaultRequestTimeout    = 15 * time.Second
@@ -21,6 +20,7 @@ const (
 	artifactoryMinVersionSupport = "7.16.0"
 	artifactoryConfigEndpoint = "api/system/logs/config"
 	artifactoryDataEndpoint   = "api/system/logs/data"
+	artifactoryProductName = "Artifactory"
 )
 
 type ArtifactoryData struct {
@@ -39,7 +39,7 @@ func (s *ArtifactoryData) GetConfig(ctx context.Context, serverId string) (*mode
 	timeoutCtx, cancelTimeout := context.WithTimeout(ctx, defaultRequestTimeout)
 	defer cancelTimeout()
 
-	err := s.checkVersion(ctx, serverId)
+	err := s.ArtifactoryValidations(ctx, serverId)
 	if err != nil {
 		return nil, err
 	}
@@ -101,22 +101,6 @@ func (s *ArtifactoryData) getVersion(ctx context.Context, serverId string) (stri
 	return strings.TrimSpace(versionData.Version), nil
 }
 
-func (s *ArtifactoryData) checkVersion(ctx context.Context, serverId string) error {
-	if os.Getenv(constants.VersionCheckEnv) == "false" {
-		return nil
-	}
-	currentVersion, err := s.getVersion(ctx, serverId)
-	if err != nil {
-		return err
-	}
-	versionHelper := cliVersionHelper.NewVersion(artifactoryMinVersionSupport)
-
-	if versionHelper.Compare(currentVersion) < 0 {
-		return fmt.Errorf("found artifactory version as %s, minimum supported version is %s", currentVersion, artifactoryMinVersionSupport)
-	}
-	return nil
-}
-
 func (s *ArtifactoryData) GetLogData(ctx context.Context, serverId string) (logData model.Data, err error) {
 	if s.nodeId == "" {
 		return logData, fmt.Errorf("node id must be set")
@@ -125,7 +109,7 @@ func (s *ArtifactoryData) GetLogData(ctx context.Context, serverId string) (logD
 		return logData, fmt.Errorf("log file name must be set")
 	}
 
-	err = s.checkVersion(ctx, serverId)
+	err = s.ArtifactoryValidations(ctx, serverId)
 	if err != nil {
 		return logData, err
 	}
@@ -167,6 +151,19 @@ func (s *ArtifactoryData) getUrl(serverId string)(url string,_ error){
 		return "", fmt.Errorf("the Artifactory url was not found in the serverId : %s; verify that you are using the latest version of the JFrog CLI", serverId)
 	}
 	return url, nil
+}
+
+func (s *ArtifactoryData) ArtifactoryValidations(ctx context.Context, serverId string) error {
+	if os.Getenv(constants.VersionCheckEnv) == "false" {
+		return nil
+	}
+
+	currentVersion, err := s.getVersion(ctx, serverId)
+	if err != nil {
+		return err
+	}
+
+	return checkVersion(currentVersion, artifactoryMinVersionSupport, artifactoryProductName)
 }
 
 func (s *ArtifactoryData) SetNodeId(nodeId string) {
