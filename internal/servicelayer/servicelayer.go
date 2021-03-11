@@ -3,9 +3,11 @@ package servicelayer
 import (
 	"context"
 	"fmt"
+	cliVersionHelper "github.com/jfrog/jfrog-client-go/utils/version"
 	"github.com/jfrog/live-logs/internal/constants"
 	"github.com/jfrog/live-logs/internal/model"
 	"github.com/jfrog/live-logs/internal/util"
+	"os"
 	"time"
 )
 
@@ -69,6 +71,19 @@ func errorHandle(statusCode int, resBody []byte) error{
 	}
 	if statusCode < 200 || statusCode >= 300 {
 		return fmt.Errorf("unexpected response; status code: %d, message: %s", statusCode, resBody)
+	}
+	return nil
+}
+
+func checkVersion(currentVersion, minVersion, productName string) error {
+	if os.Getenv(constants.VersionCheckEnv) == "false" {
+		return nil
+	}
+
+	versionHelper := cliVersionHelper.NewVersion(minVersion)
+
+	if versionHelper.Compare(currentVersion) < 0 {
+		return fmt.Errorf("found %s version as %s, minimum supported version is %s", productName, currentVersion, minVersion)
 	}
 	return nil
 }
