@@ -12,7 +12,12 @@ import (
 func GetLogsCommand() components.Command {
 	return components.Command{
 		Name:        "logs",
-		Description: "Fetch the log of a desired service",
+		Description: "Fetch the log of a desired service" +
+		"\n\nNote:" +
+		"\n\t- Xray, Mission Control, Pipelines, and Distribution only support admin access token authentication, while, Artifactory supports all types of authentication." +
+		"\n\t- The scope of the generated access token is limited to the corresponding product." +
+		"\n\t- For every product, a new dedicated entry will need to be added. " +
+		"For example, if you want to stream logs from 3 products, a separate entry will need to be configured for each product in the JFrog CLI (so is 3 entries).",
 		Aliases:     []string{"l"},
 		Arguments:   getLogsArguments(),
 		EnvVars:     getLogsEnvVar(),

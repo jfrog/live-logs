@@ -6,6 +6,17 @@ You also have the ability to `cat` and `tail -f` any log on any product node.<br
 
 **Important:** The Live Logs plugin is available to On-Prem customers and to Cloud customers who are Enterprise+ subscriptions. Admin permissions are required to run this plugin.
 
+## Requirements
+
+The plugin requires the following prerequisites,
+
+- JFrog CLI 1.45.1+
+- Artifactory 7.17.0+
+- Mission Control 4.7.0+
+- Xray 3.18.0+
+- Distribution 2.7.0+
+- Pipelines 1.13.0+
+
 ## Installation with JFrog CLI
 Installing the latest version:
 ```
@@ -32,7 +43,8 @@ Follow these steps to install and use this plugin with JFrog CLI.
 6. Copy the binary into the ```~/.jfrog/plugins``` directory.
 
 ## Note:
-- Xray, Mission Control, Pipelines, and Distribution **only support admin access token authentication**, while, Artifactory supports all types of authentication.
+- Xray, Mission Control, Pipelines, and Distribution **only support admin access token authentication**, while, Artifactory supports all types of authentication. 
+- The scope of the generated access token is limited to the corresponding product.
 - For every product, a new dedicated entry will need to be added. For example, if you want to stream logs from 3 products, a separate entry will need to be configured for each product in the JFrog CLI (so is 3 entries).
 
 ## CLI Configuration by Product
@@ -89,9 +101,9 @@ Follow these steps to install and use this plugin with JFrog CLI.
 ### Commands
 * help
     ```
-    jfrog live-logs help
-    jfrog live-logs logs help  
-    jfrog live-logs config help
+    jfrog live-logs --help
+    jfrog live-logs logs --help  
+    jfrog live-logs config --help
     ```
 * logs
   
