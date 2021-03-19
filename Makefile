@@ -1,5 +1,5 @@
 ####################################################################
-## JFrog CLI registry will use `go build` to build plugin binary.
+## JFrog CLI Plugins registry will use `go build` to build plugin binary.
 ## This file is added for user's benefit to work with code in local.
 ####################################################################
 

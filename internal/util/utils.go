@@ -5,6 +5,7 @@ import (
 	"encoding/csv"
 	"fmt"
 	"github.com/jfrog/live-logs/internal/constants"
+	"github.com/manifoldco/promptui"
 	"strings"
 	"time"
 )
@@ -58,3 +59,16 @@ func FetchAllProductIds() []string {
     productIds := []string{constants.ArtifactoryId, constants.XrayId, constants.McId, constants.PipelinesId, constants.DistributionId}
 	return productIds
 }
+
+func RunInteractiveMenu(selectionHeader string, selectionLabel string, values []string) (string, error) {
+	if selectionHeader != "" {
+		fmt.Println(selectionHeader)
+	}
+	selectMenu := promptui.Select{
+		Label: selectionLabel,
+		Items: values,
+	}
+	_, res, err := selectMenu.Run()
+	return res, err
+}
+

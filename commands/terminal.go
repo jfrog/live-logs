@@ -8,12 +8,15 @@ import (
 	"github.com/jfrog/live-logs/internal/constants"
 	"github.com/jfrog/live-logs/internal/model"
 	"github.com/jfrog/live-logs/internal/util"
-	"github.com/manifoldco/promptui"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 )
+
+var PromptForAnyKey=util.PromptAndWaitForAnyKey
+var PromptSelectMenu=util.RunInteractiveMenu
+var CliServerIds=cliCommands.GetAllServerIds
 
 func ListenForTermination(cancelCtx context.CancelFunc) {
 	c := make(chan os.Signal)
@@ -42,18 +45,18 @@ func ConfigInteractive(ctx context.Context, liveLog livelog.LiveLogs) error {
 	nonInteractiveMessage := constants.NonIntCmdDisplayPrefix + " \n\t jfrog live-logs config " +
 		selectedProductId + " " +
 		selectedCliServerId
-	util.PromptAndWaitForAnyKey(nonInteractiveMessage)
+	PromptForAnyKey(nonInteractiveMessage)
 	return liveLog.DisplayConfig(ctx)
 }
 
 func selectCliServerId() (string, error) {
-	serverIds := cliCommands.GetAllServerIds()
-	return RunInteractiveMenu("Select JFrog CLI server id", "Available server IDs", serverIds)
+	serverIds := CliServerIds()
+	return PromptSelectMenu("Select JFrog CLI server id", "Available server IDs", serverIds)
 }
 
 func selectProductId() (string, error) {
 	productIds := util.FetchAllProductIds()
-	return RunInteractiveMenu("Select JFrog CLI product id", "Available product IDs", productIds)
+	return PromptSelectMenu("Select JFrog CLI product id", "Available product IDs", productIds)
 }
 
 func LogInteractiveMenu(ctx context.Context, isStreaming bool, liveLog livelog.LiveLogs) error {
@@ -85,7 +88,7 @@ func LogInteractiveMenu(ctx context.Context, isStreaming bool, liveLog livelog.L
 								selectedCliServerId + " " +
 								nodeId + " " +
 								logName + cmdDisplayPostfix
-	util.PromptAndWaitForAnyKey(nonInteractiveMessage)
+	PromptForAnyKey(nonInteractiveMessage)
 	return liveLog.PrintLogs(ctx, nodeId, logName, isStreaming)
 }
 
@@ -97,19 +100,9 @@ func selectLogDetails(ctx context.Context, liveLog livelog.LiveLogs) (selectedNo
 	}
 
 	logsRefreshRate = util.MillisToDuration(srvConfig.RefreshRateMillis)
-	selectedNodeID, err = RunInteractiveMenu("Select Node Id", "Available Node Ids", srvConfig.Nodes)
-	selectedLogName, err = RunInteractiveMenu("Select log name", "Available log names", srvConfig.LogFileNames)
+	selectedNodeID, err = PromptSelectMenu("Select Node Id", "Available Node Ids", srvConfig.Nodes)
+	selectedLogName, err = PromptSelectMenu("Select log name", "Available log names", srvConfig.LogFileNames)
 	return
 }
 
-func RunInteractiveMenu(selectionHeader string, selectionLabel string, values []string) (string, error) {
-	if selectionHeader != "" {
-		fmt.Println(selectionHeader)
-	}
-	selectMenu := promptui.Select{
-		Label: selectionLabel,
-		Items: values,
-	}
-	_, res, err := selectMenu.Run()
-	return res, err
-}
+
