@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	cliCommands "github.com/jfrog/jfrog-cli-core/common/commands"
-	cliVersionHelper "github.com/jfrog/jfrog-client-go/utils/version"
 	"github.com/jfrog/live-logs/internal/clientlayer"
 	"github.com/jfrog/live-logs/internal/constants"
 	"github.com/jfrog/live-logs/internal/model"
@@ -19,6 +18,7 @@ const (
 	distributionMinVersionSupport = "2.7.0"
 	distributionConfigEndpoint = "api/v1/system/logs/config"
 	distributionDataEndpoint   = "api/v1/system/logs/data"
+	distributionProductName = "Distribution"
 )
 
 type DistributionData struct {
@@ -36,6 +36,11 @@ func (s *DistributionData) GetConfig(ctx context.Context, serverId string) (*mod
 
 	timeoutCtx, cancelTimeout := context.WithTimeout(ctx, defaultRequestTimeout)
 	defer cancelTimeout()
+
+	err := s.DistributionValidations(ctx,serverId)
+	if err != nil {
+		return nil, err
+	}
 
 	baseUrl, headers, err := s.getConnectionDetails(serverId)
 	if err != nil {
@@ -72,6 +77,11 @@ func (s *DistributionData) GetLogData(ctx context.Context, serverId string) (log
 	}
 	if s.logFileName == "" {
 		return logData, fmt.Errorf("log file name must be set")
+	}
+
+	err = s.DistributionValidations(ctx,serverId)
+	if err != nil {
+		return logData, err
 	}
 
 	timeoutCtx, cancelTimeout := context.WithTimeout(ctx, defaultLogRequestTimeout)
@@ -149,7 +159,7 @@ func (s *DistributionData) getVersion(ctx context.Context, serverId string) (str
 	return strings.TrimSpace(versionData.Version), nil
 }
 
-func (s *DistributionData) checkVersion(ctx context.Context, serverId string) error {
+func (s *DistributionData) DistributionValidations(ctx context.Context, serverId string) error {
 	if os.Getenv(constants.VersionCheckEnv) == "false" {
 		return nil
 	}
@@ -158,12 +168,8 @@ func (s *DistributionData) checkVersion(ctx context.Context, serverId string) er
 	if err != nil {
 		return err
 	}
-	versionHelper := cliVersionHelper.NewVersion(currentVersion)
 
-	if versionHelper.Compare(distributionMinVersionSupport) < 0 {
-		return fmt.Errorf("found distribution version as %s, minimum supported version is %s", currentVersion, distributionMinVersionSupport)
-	}
-	return nil
+	return checkVersion(currentVersion, distributionMinVersionSupport, distributionProductName)
 }
 
 func (s *DistributionData) SetNodeId(nodeId string) {

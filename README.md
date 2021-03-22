@@ -8,14 +8,16 @@ The JFrog Platform includes an integrated Live Logs plugin, which allows custome
 * The plugin is available to Cloud customers who are Enterprise+ subscriptions excluding of JFrog Xray and JFrog Pipelines.
 <br>
 
-## Installation of local binary with JFrog CLI
-Follow these steps to install and use this plugin with JFrog CLI.
-1. Verify that JFrog CLI is installed on your machine by running ```jfrog```; if it is not installed, install it (see [Installing JFrog CLI](https://jfrog.com/getcli/).
-2. Create a directory named ```plugins``` under ```~/.jfrog/``` if it does not exist already.
-3. Clone this repository.
-4. `cd` into the root directory of the cloned project.
-5. Run ```make build``` to create the binary in the current directory.
-6. Copy the binary into the ```~/.jfrog/plugins``` directory.
+## Requirements
+
+The plugin requires the following prerequisites,
+
+- JFrog CLI 1.45.1+
+- Artifactory 7.17.0+
+- Mission Control 4.7.0+
+- Xray 3.18.0+
+- Distribution 2.7.0+
+- Pipelines 1.13.0+
 
 ## Installation with JFrog CLI
 Installing the latest version:
@@ -33,8 +35,18 @@ Uninstalling a plugin
 jfrog plugin uninstall live-logs
 ```
 
+## Building from sources
+Follow these steps to install and use this plugin with JFrog CLI.
+1. Verify that JFrog CLI is installed on your machine by running ```jfrog```; if it is not installed, install it (see [Installing JFrog CLI](https://jfrog.com/getcli/).
+2. Create a directory named ```plugins``` under ```~/.jfrog/``` if it does not exist already.
+3. Clone this repository.
+4. `cd` into the root directory of the cloned project.
+5. Run ```make build``` to create the binary in the current directory.
+6. Copy the binary into the ```~/.jfrog/plugins``` directory.
+
 ## Note:
-- Xray, Mission Control, Pipelines, and Distribution **only support admin access token authentication**, while, Artifactory supports all types of authentication.
+- Xray, Mission Control, Pipelines, and Distribution **only support admin access token authentication**, while, Artifactory supports all types of authentication. 
+- The scope of the generated access token is limited to the corresponding product.
 - For every product, a new dedicated entry will need to be added. For example, if you want to stream logs from 3 products, a separate entry will need to be configured for each product in the JFrog CLI (so is 3 entries).
 
 ## CLI Configuration by Product
@@ -45,7 +57,7 @@ jfrog plugin uninstall live-logs
     ```
     jfrog config add
     ```
-2. Add the Artifactory url and authentication details.
+2. Add the Artifactory URL and authentication details.
 
 ### Configuring Mission Control
 1. Add a new server using,
@@ -53,7 +65,7 @@ jfrog plugin uninstall live-logs
     ```
     jfrog config add
     ```
-2. Add the Mission Control url.
+2. Add the Mission Control URL.
 3. Generate the access token for Mission Control (see [Generating Admin Tokens](https://www.jfrog.com/confluence/display/JFROG/Access+Tokens#AccessTokens-GeneratingAdminTokens)).
 4. Add the access token you generated for Mission Control.
 
@@ -63,7 +75,7 @@ jfrog plugin uninstall live-logs
     ```
     jfrog config add
     ```
-2. Add the Xray url.
+2. Add the Xray URL.
 3. Generate the access token for Xray (see [Generating Admin Tokens](https://www.jfrog.com/confluence/display/JFROG/Access+Tokens#AccessTokens-GeneratingAdminTokens)).
 4. Add the access token you generated for Xray.
 
@@ -73,7 +85,7 @@ jfrog plugin uninstall live-logs
     ```
     jfrog config add
     ```
-2. Add the Distribution url.
+2. Add the Distribution URL.
 3. Generate the access token for Distribution (see [Generating Admin Tokens](https://www.jfrog.com/confluence/display/JFROG/Access+Tokens#AccessTokens-GeneratingAdminTokens)).
 4. Add the access token you generated for Distribution as follows.
 
@@ -83,7 +95,7 @@ jfrog plugin uninstall live-logs
     ```
     jfrog config add
     ```
-2. Add the Pipelines url.
+2. Add the Pipelines URL.
 3. Generate the access token for Pipelines (see [Generating Admin Tokens](https://www.jfrog.com/confluence/display/JFROG/Access+Tokens#AccessTokens-GeneratingAdminTokens)).
 4. Add the access token you generated for Pipelines.
 
@@ -91,9 +103,9 @@ jfrog plugin uninstall live-logs
 ### Commands
 * help
     ```
-    jfrog live-logs help
-    jfrog live-logs logs help  
-    jfrog live-logs config help
+    jfrog live-logs --help
+    jfrog live-logs logs --help  
+    jfrog live-logs config --help
     ```
 * logs
   
