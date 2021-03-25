@@ -104,52 +104,15 @@ Follow these steps to install and use this plugin with JFrog CLI.
 * help
     ```
     jfrog live-logs --help
-    jfrog live-logs logs --help  
     jfrog live-logs config --help
+    jfrog live-logs logs --help  
     ```
-* logs
-  
-    ```
-    jfrog live-logs logs <product-id> <server-id> <node-id> <log-name> [Flags]
-    ```
-    - Arguments:
-        - product-id - This is the ID of product, which can be one of the following,
-            - rt - Artifactory
-            - mc - Mission Control
-            - xr - Xray
-            - ds - Distribution
-            - pl - Pipelines
-        - server-id - This is the JFrog CLI platform server ID.
-        - node-id - This is the selected product node ID.
-        - log-name - This is the selected product log name.
-    - Flags:
-        - i: Open interactive menu **[Default: false]**
-        - f: Show the log and keep following for changes **[Default: false]**
-    - Example:
-    ```
-  $ jfrog live-logs logs local-arti 2368364e2c78 console.log -f | grep INFO
-  2020-12-06T19:21:52.549Z [jfac ] [INFO ] [6469d8c8e2ece130] [a.s.b.AccessServerRegistrar:73] [pool-26-thread-1    ] - [ACCESS BOOTSTRAP] JFrog Access registrar finished.
-  2020-12-06T19:21:52.612Z [jfac ] [INFO ] [7ccdb881f0258729] [s.r.NodeRegistryServiceImpl:68] [27.0.0.1-8040-exec-8] - Cluster join: Successfully joined jfevt@01eqtrgsxaztsq1yq0a9s60289 with node id a15e67cc9bed
-  2020-12-06T19:21:52.622Z [jfevt] [INFO ] [152a442b8f87bacc] [access_join.go:58             ] [main                ] - Cluster join: Successfully joined the cluster [application]
-  2020-12-06T19:21:52.624Z [jfevt] [INFO ] [152a442b8f87bacc] [access_join.go:58             ] [main                ] - Executing Router register at: localhost:8046 [application]
-  ```
-    ```
-  $ jfrog live-logs logs -i
-  Select JFrog CLI server id
-  ✔ local-arti
-  Select node id
-  ✔ 2368364e2c78
-  Select log name
-  ✔ console.log
-  2020-12-06T19:21:52.549Z [jfac ] [INFO ] [6469d8c8e2ece130] [a.s.b.AccessServerRegistrar:73] [pool-26-thread-1    ] - [ACCESS BOOTSTRAP] JFrog Access registrar finished.
-  2020-12-06T19:21:52.612Z [jfac ] [INFO ] [7ccdb881f0258729] [s.r.NodeRegistryServiceImpl:68] [27.0.0.1-8040-exec-8] - Cluster join: Successfully joined jfevt@01eqtrgsxaztsq1yq0a9s60289 with node id a15e67cc9bed
-  2020-12-06T19:21:52.622Z [jfevt] [INFO ] [152a442b8f87bacc] [access_join.go:58             ] [main                ] - Cluster join: Successfully joined the cluster [application]
-  2020-12-06T19:21:52.624Z [jfevt] [INFO ] [152a442b8f87bacc] [access_join.go:58             ] [main                ] - Executing Router register at: localhost:8046 [application]
-  ```
 
 * config
 
-  ```jfrog live-logs config <product-id> <server-id> [Flags]```
+  ```
+  jfrog live-logs config <product-id> <server-id> [Flags]
+  ```
     - Arguments:
         - product-id - The ID of product, which can be one of the following,
             - rt - Artifactory
@@ -196,11 +159,53 @@ Select JFrog CLI server id
   ]
 }
 ```
+* logs
+
+    ```
+    jfrog live-logs logs <product-id> <server-id> <node-id> <log-name> [Flags]
+    ```
+    - Arguments:
+        - product-id - This is the ID of product, which can be one of the following,
+            - rt - Artifactory
+            - mc - Mission Control
+            - xr - Xray
+            - ds - Distribution
+            - pl - Pipelines
+        - server-id - This is the JFrog CLI platform server ID.
+        - node-id - This is the selected product node ID.
+        - log-name - This is the selected product log name.
+    - Flags:
+        - i: Open interactive menu **[Default: false]**
+        - f: Show the log and keep following for changes **[Default: false]**
+    - Example:
+    ```
+  $ jfrog live-logs logs rt local-arti 2368364e2c78 artifactory-service.log -f | grep INFO
+    2021-03-25T04:00:00.006Z [jfrt ] [INFO ] [d76675e362ffbd6a] [.s.d.b.s.g.GarbageCollector:66] [art-exec-11         ] - Starting GC strategy 'TRASH_AND_BINARIES'
+    2021-03-25T04:00:00.012Z [jfrt ] [INFO ] [d76675e362ffbd6a] [.s.d.b.s.g.GarbageCollector:68] [art-exec-11         ] - Finished GC Strategy 'TRASH_AND_BINARIES'
+    2021-03-25T04:30:34.196Z [jfrt ] [INFO ] [94109ae150da76e ] [aseBundleCleanupServiceImpl:84] [art-exec-16         ] - Starting to cleanup incomplete Release Bundles
+    2021-03-25T04:30:34.199Z [jfrt ] [INFO ] [94109ae150da76e ] [aseBundleCleanupServiceImpl:90] [art-exec-16         ] - Finished incomplete Release Bundles cleanup  
+    ```
+    ```
+  $ jfrog live-logs logs -i
+  Select JFrog CLI product id
+  ✔ rt
+  Select JFrog CLI server id
+  ✔ local-arti
+  Select node id
+  ✔ 2368364e2c78
+  Select log name
+  ✔ artifactory-service.log
+  2021-03-25T04:00:00.006Z [jfrt ] [INFO ] [d76675e362ffbd6a] [.s.d.b.s.g.GarbageCollector:66] [art-exec-11         ] - Starting GC strategy 'TRASH_AND_BINARIES'
+  2021-03-25T04:00:00.012Z [jfrt ] [INFO ] [d76675e362ffbd6a] [.s.d.b.s.g.GarbageCollector:68] [art-exec-11         ] - Finished GC Strategy 'TRASH_AND_BINARIES'
+  2021-03-25T04:30:34.196Z [jfrt ] [INFO ] [94109ae150da76e ] [aseBundleCleanupServiceImpl:84] [art-exec-16         ] - Starting to cleanup incomplete Release Bundles
+  2021-03-25T04:30:34.199Z [jfrt ] [INFO ] [94109ae150da76e ] [aseBundleCleanupServiceImpl:90] [art-exec-16         ] - Finished incomplete Release Bundles cleanup  
+  ```
+  
 ## Using JFrog CLI
 If you use an argument incorrectly, the CLI will suggest the correct value.
 <br>For example:
 ```
-$ jfrog live-logs logs local-artii 2368364e2c78 console.log
+$ jfrog live-logs logs local-artii 2368364e2c78 artifactory-service.log
 [Error] server id not found [local-artii], consider using one of the following server id values [remote-arti,local-arti]
 ```
 ## Release Notes
