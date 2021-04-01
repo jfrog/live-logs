@@ -4,8 +4,9 @@
 The JFrog Platform includes an integrated Live Logs plugin, which allows customers to get the JFrog product logs (Artifactory, Xray, Mission Control, Distribution, and Pipelines) using the JFrog CLI Plugin. The plugin also provides the ability to `cat` and `tail -f` any log on any product node.<br>
 
 **Note:** 
-* The Live Logs plugin is available to all On-Prem customers. Admin permissions are required to run this plugin. 
-* The plugin is available to Cloud customers who are Enterprise+ subscriptions excluding of JFrog Xray and JFrog Pipelines.
+The Live Logs plugin is available to:
+* Self-Hosted customers who are Enterprise | Enterprise+ subscriptions. Admin permissions are required to run this plugin. 
+* Cloud customers who are Enterprise+ subscriptions excluding of JFrog Xray and JFrog Pipelines.
 <br>
 
 ## Requirements
