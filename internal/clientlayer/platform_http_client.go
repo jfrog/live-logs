@@ -35,7 +35,10 @@ func SendGet(_ context.Context, cliServerId, endpoint, nodeId, baseUrl string, e
 		return nil, nil, err
 	}
 	client := platformClient.platform.Client()
-	httpClientDetails := (*client.JfrogServiceDetails).CreateHttpClientDetails()
+
+	platformDetails, err := cliCommands.GetConfig(cliServerId, false)
+	artAuth, err := platformDetails.CreateArtAuthConfig()
+	httpClientDetails := artAuth.CreateHttpClientDetails()
 
 	if nodeId != constants.EmptyNodeId && nodeId != "" {
 		httpClientDetails.Headers[constants.NodeIdHeader] = nodeId
@@ -52,4 +55,3 @@ func SendGet(_ context.Context, cliServerId, endpoint, nodeId, baseUrl string, e
 	}
 	return res, resBody, nil
 }
-
