@@ -14,7 +14,7 @@ func getApp() components.App {
 	app := components.App{}
 	app.Name = "live-logs"
 	app.Description = "Print logs from a remote JFrog product."
-	app.Version = "v1.0.1"
+	app.Version = "v1.0.2"
 	app.Commands = getCommands()
 	return app
 }
