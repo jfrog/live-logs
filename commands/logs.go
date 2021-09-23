@@ -3,7 +3,7 @@ package commands
 import (
 	"context"
 	"fmt"
-	"github.com/jfrog/jfrog-cli-core/plugins/components"
+	"github.com/jfrog/jfrog-cli-core/v2/plugins/components"
 	"github.com/jfrog/live-logs/internal"
 	"github.com/jfrog/live-logs/internal/constants"
 	"strconv"

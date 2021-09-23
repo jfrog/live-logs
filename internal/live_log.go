@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	cliCommands "github.com/jfrog/jfrog-cli-core/common/commands"
+	cliCommands "github.com/jfrog/jfrog-cli-core/v2/common/commands"
 	"github.com/jfrog/live-logs/internal/model"
 	"github.com/jfrog/live-logs/internal/servicelayer"
 	"github.com/jfrog/live-logs/internal/util"
