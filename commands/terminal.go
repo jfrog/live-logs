@@ -3,7 +3,7 @@ package commands
 import (
 	"context"
 	"fmt"
-	cliCommands "github.com/jfrog/jfrog-cli-core/common/commands"
+	cliCommands "github.com/jfrog/jfrog-cli-core/v2/common/commands"
 	"github.com/jfrog/live-logs/internal"
 	"github.com/jfrog/live-logs/internal/constants"
 	"github.com/jfrog/live-logs/internal/model"

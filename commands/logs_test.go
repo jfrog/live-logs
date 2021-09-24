@@ -1,7 +1,7 @@
 package commands
 
 import (
-	"github.com/jfrog/jfrog-cli-core/plugins/components"
+	"github.com/jfrog/jfrog-cli-core/v2/plugins/components"
 	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"

@@ -2,8 +2,8 @@ package clientlayer
 
 import (
 	"context"
-	"github.com/jfrog/jfrog-cli-core/artifactory/utils"
-	cliCommands "github.com/jfrog/jfrog-cli-core/common/commands"
+	"github.com/jfrog/jfrog-cli-core/v2/artifactory/utils"
+	cliCommands "github.com/jfrog/jfrog-cli-core/v2/common/commands"
 	"github.com/jfrog/jfrog-client-go/artifactory"
 	"github.com/jfrog/live-logs/internal/constants"
 	"net/http"
@@ -14,7 +14,7 @@ func newPlatformHttpClient(cliServerId string) (*platformHttpClient, error) {
 	if err != nil {
 		return nil, err
 	}
-	platform, err := utils.CreateServiceManager(platformDetails, false)
+	platform, err := utils.CreateServiceManager(platformDetails, -1, false)
 	if err != nil {
 		return nil, err
 	}
@@ -55,3 +55,4 @@ func SendGet(_ context.Context, cliServerId, endpoint, nodeId, baseUrl string, e
 	}
 	return res, resBody, nil
 }
+
