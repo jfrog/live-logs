@@ -23,22 +23,22 @@ The plugin requires the following prerequisites,
 ## Installation with JFrog CLI
 Installing the latest version:
 ```
-jfrog plugin install live-logs
+jf plugin install live-logs
 ```
 
 Installing a specific version:
 ```
-jfrog plugin install live-logs@version
+jf plugin install live-logs@version
 ```
 
 Uninstalling a plugin
 ```
-jfrog plugin uninstall live-logs
+jf plugin uninstall live-logs
 ```
 
 ## Building from sources
 Follow these steps to install and use this plugin with JFrog CLI.
-1. Verify that JFrog CLI is installed on your machine by running ```jfrog```; if it is not installed, install it (see [Installing JFrog CLI](https://jfrog.com/getcli/).
+1. Verify that JFrog CLI is installed on your machine by running ```jf```; if it is not installed, install it (see [Installing JFrog CLI](https://jfrog.com/getcli/).
 2. Create a directory named ```plugins``` under ```~/.jfrog/``` if it does not exist already.
 3. Clone this repository.
 4. `cd` into the root directory of the cloned project.
@@ -56,7 +56,7 @@ Follow these steps to install and use this plugin with JFrog CLI.
 1. Add a new server using,
 
     ```
-    jfrog config add
+    jf c add
     ```
 2. Add the Artifactory URL and authentication details.
 
@@ -64,7 +64,7 @@ Follow these steps to install and use this plugin with JFrog CLI.
 1. Add a new server using,
 
     ```
-    jfrog config add
+    jf c add
     ```
 2. Add the Mission Control URL.
 3. Generate the access token for Mission Control (see [Generating Admin Tokens](https://www.jfrog.com/confluence/display/JFROG/Access+Tokens#AccessTokens-GeneratingAdminTokens)).
@@ -74,7 +74,7 @@ Follow these steps to install and use this plugin with JFrog CLI.
 1. Add a new server using,
 
     ```
-    jfrog config add
+    jf c add
     ```
 2. Add the Xray URL.
 3. Generate the access token for Xray (see [Generating Admin Tokens](https://www.jfrog.com/confluence/display/JFROG/Access+Tokens#AccessTokens-GeneratingAdminTokens)).
@@ -84,7 +84,7 @@ Follow these steps to install and use this plugin with JFrog CLI.
 1. Add a new server using,
 
     ```
-    jfrog config add
+    jf c add
     ```
 2. Add the Distribution URL.
 3. Generate the access token for Distribution (see [Generating Admin Tokens](https://www.jfrog.com/confluence/display/JFROG/Access+Tokens#AccessTokens-GeneratingAdminTokens)).
@@ -94,7 +94,7 @@ Follow these steps to install and use this plugin with JFrog CLI.
 1. Add a new server using,
 
     ```
-    jfrog config add
+    jf c add
     ```
 2. Add the Pipelines URL.
 3. Generate the access token for Pipelines (see [Generating Admin Tokens](https://www.jfrog.com/confluence/display/JFROG/Access+Tokens#AccessTokens-GeneratingAdminTokens)).
@@ -104,15 +104,15 @@ Follow these steps to install and use this plugin with JFrog CLI.
 ### Commands
 * help
     ```
-    jfrog live-logs --help
-    jfrog live-logs config --help
-    jfrog live-logs logs --help  
+    jf live-logs --help
+    jf live-logs config --help
+    jf live-logs logs --help  
     ```
 
 * config
 
   ```
-  jfrog live-logs config <product-id> <server-id> [Flags]
+  jf live-logs config <product-id> <server-id> [Flags]
   ```
     - Arguments:
         - product-id - The ID of product, which can be one of the following,
@@ -127,7 +127,7 @@ Follow these steps to install and use this plugin with JFrog CLI.
     - Example:
 
 ```
-$ jfrog live-logs config rt local-rt
+$ jf live-logs config rt local-rt
 {
   "logs": [
     "access-request.log",
@@ -142,7 +142,7 @@ $ jfrog live-logs config rt local-rt
 }
 ```
 ```
-$ jfrog live-logs config -i    
+$ jf live-logs config -i    
 Select JFrog CLI product id
 ✔ rt
 Select JFrog CLI server id
@@ -163,7 +163,7 @@ Select JFrog CLI server id
 * logs
 
     ```
-    jfrog live-logs logs <product-id> <server-id> <node-id> <log-name> [Flags]
+    jf live-logs logs <product-id> <server-id> <node-id> <log-name> [Flags]
     ```
     - Arguments:
         - product-id - This is the ID of product, which can be one of the following,
@@ -180,14 +180,14 @@ Select JFrog CLI server id
         - f: Show the log and keep following for changes **[Default: false]**
     - Example:
     ```
-  $ jfrog live-logs logs rt local-arti 2368364e2c78 artifactory-service.log -f | grep INFO
+  $ jf live-logs logs rt local-arti 2368364e2c78 artifactory-service.log -f | grep INFO
     2021-03-25T04:00:00.006Z [jfrt ] [INFO ] [d76675e362ffbd6a] [.s.d.b.s.g.GarbageCollector:66] [art-exec-11         ] - Starting GC strategy 'TRASH_AND_BINARIES'
     2021-03-25T04:00:00.012Z [jfrt ] [INFO ] [d76675e362ffbd6a] [.s.d.b.s.g.GarbageCollector:68] [art-exec-11         ] - Finished GC Strategy 'TRASH_AND_BINARIES'
     2021-03-25T04:30:34.196Z [jfrt ] [INFO ] [94109ae150da76e ] [aseBundleCleanupServiceImpl:84] [art-exec-16         ] - Starting to cleanup incomplete Release Bundles
     2021-03-25T04:30:34.199Z [jfrt ] [INFO ] [94109ae150da76e ] [aseBundleCleanupServiceImpl:90] [art-exec-16         ] - Finished incomplete Release Bundles cleanup  
     ```
     ```
-  $ jfrog live-logs logs -i
+  $ jf live-logs logs -i
   Select JFrog CLI product id
   ✔ rt
   Select JFrog CLI server id
@@ -206,7 +206,7 @@ Select JFrog CLI server id
 If you use an argument incorrectly, the CLI will suggest the correct value.
 <br>For example:
 ```
-$ jfrog live-logs logs local-artii 2368364e2c78 artifactory-service.log
+$ jf live-logs logs local-artii 2368364e2c78 artifactory-service.log
 [Error] server id not found [local-artii], consider using one of the following server id values [remote-arti,local-arti]
 ```
 ## Release Notes
