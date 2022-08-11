@@ -3,7 +3,7 @@ package servicelayer
 import (
 	"context"
 	"fmt"
-	cliVersionHelper "github.com/jfrog/jfrog-client-go/utils/version"
+	cliVersionHelper "github.com/jfrog/gofrog/version"
 	"github.com/jfrog/live-logs/internal/constants"
 	"github.com/jfrog/live-logs/internal/model"
 	"github.com/jfrog/live-logs/internal/util"
@@ -41,28 +41,28 @@ func NewService(productId string) (serviceLayer ServiceLayer, err error) {
 	}
 
 	switch productId {
-		case constants.ArtifactoryId :
-			serviceLayer = new (ArtifactoryData)
+	case constants.ArtifactoryId:
+		serviceLayer = new(ArtifactoryData)
 
-		case constants.McId :
-			serviceLayer = new (McData)
+	case constants.McId:
+		serviceLayer = new(McData)
 
-		case constants.PipelinesId :
-			serviceLayer = new (PipelinesData)
+	case constants.PipelinesId:
+		serviceLayer = new(PipelinesData)
 
-		case constants.DistributionId :
-			serviceLayer = new (DistributionData)
+	case constants.DistributionId:
+		serviceLayer = new(DistributionData)
 
-		case constants.XrayId :
-			serviceLayer = new (XrayData)
+	case constants.XrayId:
+		serviceLayer = new(XrayData)
 
-		default :
-			err = fmt.Errorf("invalid product id '%s' provided, valid values are %v", productId, util.FetchAllProductIds())
+	default:
+		err = fmt.Errorf("invalid product id '%s' provided, valid values are %v", productId, util.FetchAllProductIds())
 	}
 	return serviceLayer, err
 }
 
-func errorHandle(statusCode int, resBody []byte) error{
+func errorHandle(statusCode int, resBody []byte) error {
 	if statusCode == 200 {
 		return nil
 	}

@@ -14,14 +14,14 @@ func newPlatformHttpClient(cliServerId string) (*platformHttpClient, error) {
 	if err != nil {
 		return nil, err
 	}
-	platform, err := utils.CreateServiceManager(platformDetails, -1, false)
+	platform, err := utils.CreateServiceManager(platformDetails, -1, 0, false)
 	if err != nil {
 		return nil, err
 	}
 
 	return &platformHttpClient{
 		platform: platform,
-	},nil
+	}, nil
 }
 
 type platformHttpClient struct {
@@ -55,4 +55,3 @@ func SendGet(_ context.Context, cliServerId, endpoint, nodeId, baseUrl string, e
 	}
 	return res, resBody, nil
 }
-
