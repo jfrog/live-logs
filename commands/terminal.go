@@ -14,12 +14,12 @@ import (
 	"time"
 )
 
-var PromptForAnyKey=util.PromptAndWaitForAnyKey
-var PromptSelectMenu=util.RunInteractiveMenu
-var CliServerIds=cliCommands.GetAllServerIds
+var PromptForAnyKey = util.PromptAndWaitForAnyKey
+var PromptSelectMenu = util.RunInteractiveMenu
+var CliServerIds = cliCommands.GetAllServerIds
 
 func ListenForTermination(cancelCtx context.CancelFunc) {
-	c := make(chan os.Signal)
+	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM, syscall.SIGKILL, syscall.SIGABRT)
 	go func() {
 		<-c
@@ -78,16 +78,16 @@ func LogInteractiveMenu(ctx context.Context, isStreaming bool, liveLog livelog.L
 	}
 	liveLog.SetLogsRefreshRate(logsRefreshRate)
 
-	cmdDisplayPostfix:=""
+	cmdDisplayPostfix := ""
 	if isStreaming {
-		cmdDisplayPostfix = " -"+ constants.TailFlag + cmdDisplayPostfix
+		cmdDisplayPostfix = " -" + constants.TailFlag + cmdDisplayPostfix
 	}
 
 	nonInteractiveMessage := constants.NonIntCmdDisplayPrefix + " \n\t jfrog live-logs logs " +
-								selectedProductId + " " +
-								selectedCliServerId + " " +
-								nodeId + " " +
-								logName + cmdDisplayPostfix
+		selectedProductId + " " +
+		selectedCliServerId + " " +
+		nodeId + " " +
+		logName + cmdDisplayPostfix
 	PromptForAnyKey(nonInteractiveMessage)
 	return liveLog.PrintLogs(ctx, nodeId, logName, isStreaming)
 }
@@ -104,5 +104,3 @@ func selectLogDetails(ctx context.Context, liveLog livelog.LiveLogs) (selectedNo
 	selectedLogName, err = PromptSelectMenu("Select log name", "Available log names", srvConfig.LogFileNames)
 	return
 }
-
-
