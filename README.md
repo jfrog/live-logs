@@ -9,6 +9,16 @@ The Live Logs plugin is available to:
 * Cloud customers who are Enterprise+ subscriptions excluding of JFrog Xray and JFrog Pipelines.
 <br>
 
+The log types that are supported as part of the CLI plugin for Live Logs are as follows:
+
+Artifactory | Distribution:
+
+    *-request.log
+
+Mission Control:
+
+    "*-request.log,mc-error.log"
+
 ## Requirements
 
 The plugin requires the following prerequisites,
