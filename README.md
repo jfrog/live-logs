@@ -1,12 +1,12 @@
 # live-logs
 
 ## About the Live Logs Plugin
-The JFrog Platform includes an integrated Live Logs plugin, which allows customers to get the JFrog product logs (Artifactory, Xray, Mission Control, Distribution, and Pipelines) using the JFrog CLI Plugin. The plugin also provides the ability to `cat` and `tail -f` any log on any product node.<br>
+The JFrog Platform includes an integrated Live Logs plugin, which allows customers to get the JFrog product logs (Artifactory, Xray, Distribution, and Pipelines) using the JFrog CLI Plugin. The plugin also provides the ability to `cat` and `tail -f` any log on any product node.<br>
 
 **Note:** 
 The Live Logs plugin is available to:
 * Self-Hosted customers who are Enterprise | Enterprise+ subscriptions. Admin permissions are required to run this plugin. 
-* Cloud customers who are Enterprise+ subscriptions excluding of JFrog Xray and JFrog Pipelines.
+* Cloud customers who are Enterprise+ subscriptions. Available logs: only 'artifactory-request.log' and 'distribution-request.log'.
 <br>
 
 The log types that are supported as part of the CLI plugin for Live Logs are as follows:
@@ -15,17 +15,12 @@ Artifactory | Distribution:
 
     *-request.log
 
-Mission Control:
-
-    "*-request.log,mc-error.log"
-
 ## Requirements
 
 The plugin requires the following prerequisites,
 
 - JFrog CLI 1.45.1+
 - Artifactory 7.17.0+
-- Mission Control 4.7.0+
 - Xray 3.18.0+
 - Distribution 2.7.0+
 - Pipelines 1.13.0+
@@ -56,7 +51,7 @@ Follow these steps to install and use this plugin with JFrog CLI.
 6. Copy the binary into the ```~/.jfrog/plugins``` directory.
 
 ## Note:
-- Xray, Mission Control, Pipelines, and Distribution **only support admin access token authentication**, while, Artifactory supports all types of authentication. 
+- Xray, Pipelines, and Distribution **only support admin access token authentication**, while, Artifactory supports all types of authentication. 
 - The scope of the generated access token is limited to the corresponding product.
 - For every product, a new dedicated entry will need to be added. For example, if you want to stream logs from 3 products, a separate entry will need to be configured for each product in the JFrog CLI (so is 3 entries).
 
@@ -69,16 +64,6 @@ Follow these steps to install and use this plugin with JFrog CLI.
     jf c add
     ```
 2. Add the Artifactory URL and authentication details.
-
-### Configuring Mission Control
-1. Add a new server using,
-
-    ```
-    jf c add
-    ```
-2. Add the Mission Control URL.
-3. Generate the access token for Mission Control (see [Generating Admin Tokens](https://www.jfrog.com/confluence/display/JFROG/Access+Tokens#AccessTokens-GeneratingAdminTokens)).
-4. Add the access token you generated for Mission Control.
 
 ### Configuring Xray
 1. Add a new server using,
@@ -127,7 +112,6 @@ Follow these steps to install and use this plugin with JFrog CLI.
     - Arguments:
         - product-id - The ID of product, which can be one of the following,
             - rt - Artifactory
-            - mc - Mission Control
             - xr - Xray
             - ds - Distribution
             - pl - Pipelines
@@ -178,7 +162,6 @@ Select JFrog CLI server id
     - Arguments:
         - product-id - This is the ID of product, which can be one of the following,
             - rt - Artifactory
-            - mc - Mission Control
             - xr - Xray
             - ds - Distribution
             - pl - Pipelines
